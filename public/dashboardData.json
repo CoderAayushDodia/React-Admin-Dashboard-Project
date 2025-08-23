@@ -1,0 +1,192 @@
+{
+  "sidebarMenu": [
+    {
+      "name": "Dashboard Home",
+      "link": "/dashboard",
+      "active": true,
+      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+    },
+    {
+      "name": "Activists Management",
+      "link": "/activists",
+      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+    },
+    {
+      "name": "Sabhasad Management",
+      "link": "/sabhasad",
+      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+    },
+    {
+      "name": "Receipts Management",
+      "link": "/receipts",
+      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+    },
+    {
+      "name": "Announcements",
+      "link": "/announcements",
+      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+    },
+    {
+      "name": "Report Management",
+      "link": "/reports",
+      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+    },
+    {
+      "name": "User Management",
+      "link": "/users",
+      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+    }
+  ],
+
+  "stats": [
+    { "title": "Total Activist", "value": 2467 },
+    { "title": "Total members", "value": 13513 },
+    { "title": "Collections This Month", "value": 234000 },
+    { "title": "Collections This Year", "value": "₹41000", "currency": "INR" },
+    { "title": "New Daily Reports", "value": 126 },
+    { "title": "New Members Ratio", "value": "64%" }
+  ],
+
+  "memberShipChart": {
+    "labels": [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
+
+    "label": "Members",
+    "data": [
+      4300, 4350, 4400, 4420, 4450, 4500, 4550, 4570, 4600, 4650, 4700, 4750,
+      4800, 4850, 4900, 4950, 5465, 5480, 5500, 5550, 5600, 5650, 5700, 5720,
+      5750, 5800, 5850, 5900, 5950, 6000
+    ]
+  },
+
+  "collectionTrends": {
+    "labels": ["Nasik", "Satara", "Pune", "Mumbai", "Latur", "Konkan"],
+    "datasets": [
+      {
+        "label": "Collections (₹)",
+        "data": [6000, 7500, 5000, 6500, 7000, 6300],
+        "backgroundColor": "lightgray"
+      }
+    ]
+  },
+
+  "topPerformers": {
+    "labels": [
+      "Ahmed Bilal",
+      "Vikas Mhatre",
+      "Niranjan Shah",
+      "Pushpa Devi",
+      "Bhumika Jay",
+      "Premchand Ji"
+    ],
+    "datasets": [
+      {
+        "data": [25, 20, 15, 10, 20, 10],
+        "backgroundColor": [
+          "#e60000",
+          "#ff3333",
+          "#ff4d4d",
+          "#ff6666",
+          "#ff9999",
+          "#ffcccc"
+        ]
+      }
+    ]
+  },
+
+  "newVsOldMembers": {
+    "labels": [
+      "Gondi",
+      "Vel",
+      "Puravana",
+      "Sankop",
+      "Uripa",
+      "Nikurva",
+      "Mahuva"
+    ],
+    "datasets": [
+      {
+        "label": "New",
+        "data": [10, 12, 9, 11, 10, 8, 14],
+        "backgroundColor": "red"
+      },
+      {
+        "label": "Old",
+        "data": [20, 18, 22, 19, 21, 23, 17],
+        "backgroundColor": "lightgray"
+      }
+    ]
+  },
+
+  "notifications": [
+    {
+      "id": 100,
+      "message": "Expense Request of #100 From Shankar Mahadev",
+      "time": "2 days ago"
+    },
+    {
+      "id": 1120,
+      "message": "Expense Request of #1120 From Rahul Raj Singh",
+      "time": "2 days ago"
+    },
+    {
+      "id": 4312,
+      "message": "Expense Request of #4312 From Singhaniya Baldev",
+      "time": "11 days ago"
+    },
+    {
+      "id": 9886,
+      "message": "Expense Request of #9886 From Singhaniya Baldev",
+      "time": "20 days ago"
+    },
+    {
+      "id": 25432,
+      "message": "Expense Request of #25432 From Singhaniya Baldev",
+      "time": "2 months ago"
+    }
+  ],
+
+  "reportTypes": ["Membership", "Financial Summary"],
+  "financialSummaryYears": ["2024", "2025"],
+  "donorTypes": ["Old Donor", "New Donor"],
+
+  "menuDropdown": [
+    "Membership",
+    "Collections",
+    "Activist Performance",
+    "Daily Report Summaries",
+    "New member Analysis"
+  ],
+
+  "roles": [
+    "Vice President",
+    "State President Secretary",
+    "District President Secretary",
+    "Taluka President Secretary",
+    "Head, Member"
+  ],
+
+  "regions": [
+    {
+      "name": "Nasik",
+      "children": [
+        {
+          "name": "Satara",
+          "children": [
+            {
+              "name": "Janakpur",
+              "children": [
+                { "name": "Pongari" },
+                { "name": "Sillwad" },
+                { "name": "Perikona" },
+                { "name": "Bengori" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Konkan"
+    }
+  ]
+}
