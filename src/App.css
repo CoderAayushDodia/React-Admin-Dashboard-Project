@@ -407,4 +407,8 @@ select:focus {
   .dropdown-content{
     left: 0;
   }
+  .chart-3 canvas{
+  height: 200px !important;
+  width: 100% !important;
+}
 }
