@@ -25,7 +25,7 @@ function App() {
   };
 
   return (
-    <div className="grid-container">
+    <div className="grid-container position-relative">
       <Header
         OpenSidebar={OpenSidebar}
         regions={dashboardData?.regions || []}

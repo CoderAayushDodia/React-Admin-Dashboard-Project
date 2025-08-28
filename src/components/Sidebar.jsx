@@ -20,7 +20,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar, menuItems }) {
           <i className="fa-solid fa-xmark"></i>
         </span>
       </div>
-      <ul className="sidebar-list list-unstyled px-3 py-1">
+      <ul className="sidebar-list1 list-unstyled px-3 py-1">
         {menuItems.map((item, index) => (
           <li key={index} className="mb-1">
             {/* Parent Item */}

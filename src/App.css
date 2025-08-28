@@ -214,7 +214,7 @@ option {
 /* Generate Button */
 .report-container {
   padding: 24px;
-  max-width: 400px;
+  min-width: 400px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -288,35 +288,64 @@ select:focus {
 }
 
 .report-container {
-  position: absolute;
+  position: fixed;
   z-index: 1;
-  top: 40px;
+  top: 140px;
   visibility: hidden;
-  text-align: start;
-  right: 0;
-  min-width: 400px;
+  right: 40px;
+  width: auto;
+  max-width: 400px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  /* transform: scale(0.8) translateY(-10px); */
   transform-origin: top right;
   transition: transform 0.3s ease-in-out;
-  pointer-events: none; /* prevent clicks when hidden */
+  pointer-events: none;
 }
 
 .report-container.show {
-  /* transform: scale(1) translateY(0); */
   visibility: visible;
   pointer-events: auto;
 }
 
-.nav-item button{
+.notification-modal {
+  position: fixed;
+  z-index: 2000;
+  top: 70px;
+  right: 10px;
+  width: auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease forwards;
+  max-width: 400px;
+}
+
+.nav-item button {
   background-color: #e32124;
 }
 
-.chart-3 canvas{
+.chart-3 canvas {
   height: 380px !important;
   width: 100% !important;
+}
+
+.custom-select {
+  border: 1px solid #d5d7da;
+  border-radius: 4px;
+  padding: 6px 5px 6px 10px;
+  font-size: 14px;
+}
+
+.header-title img {
+  height: 32px;
+  width: 29px;
+}
+
+.header-title h2 {
+  font-size: 18px;
+  font-weight: bolder;
+  color: #e32124;
 }
 
 /* Medium <= 992px */
@@ -359,12 +388,16 @@ select:focus {
   .dropdown {
     font-size: 10px;
   }
+  .sidebar-list,
+  .receipt-announcement-div {
+    display: flex !important;
+  }
 }
 
 @media screen and (max-width: 768px) {
-  .main-title {
-    display: flex;
-    flex-direction: column;
+  .sidebar-list,
+  .receipt-announcement-div {
+    display: flex !important;
   }
 
   .header-right {
@@ -377,12 +410,8 @@ select:focus {
   .chart-controls {
     justify-content: space-between;
   }
-  .main-title {
-    text-align: center;
-  }
-  .sidebar-list{
-    margin-top: 30px;
-    align-self: center;
+  .notification {
+    color: #e32124;
   }
 }
 
@@ -395,20 +424,71 @@ select:focus {
     display: flex;
     flex-direction: column;
     width: 100%;
-  }
-
-  .main-title ul li {
-    margin-bottom: 30px;
+    gap: 0 !important;
   }
   .header-right {
     gap: 7px !important;
   }
 
-  .dropdown-content{
+  .dropdown-content {
     left: 0;
   }
-  .chart-3 canvas{
-  height: 200px !important;
-  width: 100% !important;
+  .chart-3 canvas {
+    height: 200px !important;
+    width: 100% !important;
+  }
+  .sidebar-list {
+    position: fixed;
+    z-index: 10;
+    margin: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px;
+    background: #fff; 
+  }
+
+  .receipt-announcement-div {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .receipt-announcement-div li {
+    flex: 1; 
+    margin: 0;
+  }
+
+  .receipt-announcement-div a {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .report-container-wrapper li {
+    display: grid;
+    text-align: center;
+    margin: 0;
+  }
+  .report-container {
+    top: auto; 
+    bottom: 80px; 
+    left: 16px;
+    right: 16px;
+    width: auto; 
+    max-width: none;
+    margin: 0 auto;
+  }
+  .nofication-modal {
+    /* left: auto; */
+    right: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
+  }
 }
+@media screen and (max-width: 391px) {
+  .receipt-announcement-div li a {
+    font-size: 14px;
+  }
 }

@@ -69,7 +69,7 @@ function Header({ OpenSidebar, regions, notifications }) {
         <i className="fa-solid fa-bars" onClick={OpenSidebar}></i>
       </div>
       <div
-        className="header-left rounded d-flex align-items-center position-relative "
+        className="header-left rounded d-flex align-items-center position-relative d-lg-flex d-none"
         ref={dropdownRef}
       >
         <span>
@@ -92,8 +92,12 @@ function Header({ OpenSidebar, regions, notifications }) {
           </div>
         )}
       </div>
+      <div className="header-title d-flex align-items-center gap-2 d-block d-lg-none">
+        <img src="/image 5.png" alt="Logo" />
+        <h2 className="mb-0">श्रमजीवी संघटना (महाराष्ट्र)</h2>
+      </div>
       <div className="header-right d-flex align-items-center position-relative">
-        <span className="material-symbols-outlined"> settings </span>
+        <span className="material-symbols-outlined d-lg-block d-none"> settings </span>
         <span
           className="material-symbols-outlined notification p-1 cursor-pointer"
           onClick={() => setShowNotifications((prev) => !prev)}
@@ -104,14 +108,16 @@ function Header({ OpenSidebar, regions, notifications }) {
         {showNotifications && (
           <div
             ref={notifRef}
-            className="position-absolute bg-white border rounded shadow p-3"
-            style={{
-              top: "110%",
-              right: 0,
-              width: "400px",
-              zIndex: 2000,
-              animation: "slideDown 0.3s ease forwards",
-            }}
+            className="bg-white border rounded shadow p-3 notification-modal"
+            // style={{
+            //   top: "140px",
+            //   right: 0,
+            //   width: "100%",
+            //   maxWidth:"400px",
+            //   margin: 0,
+            //   zIndex: 2000,
+            //   animation: "slideDown 0.3s ease forwards",
+            // }}
           >
             <div className="d-flex justify-content-between align-items-center mb-2">
               <h6 className="fw-bold mb-0">Notification</h6>
@@ -132,7 +138,7 @@ function Header({ OpenSidebar, regions, notifications }) {
                     className="rounded-circle me-2"
                     style={{ width: "35px", height: "35px" }}
                   />
-                  <div className="notification-text d-flex justify-content-between">
+                  <div className="notification-text d-flex justify-content-between gap-2">
                     <p className="mb-0 small">{notif.message}</p>
                     <small className="text-muted">{notif.time}</small>
                   </div>
@@ -141,7 +147,7 @@ function Header({ OpenSidebar, regions, notifications }) {
             </div>
           </div>
         )}
-        <img src="/Avatar.png" alt="Profile photo" />
+        <img src="/Avatar.png" alt="Profile photo" className=" d-lg-block d-none"/>
       </div>
     </header>
   );
