@@ -423,8 +423,6 @@ function Home() {
               <div className="chart-controls d-flex align-item-center flex-wrap justify-content-between">
                 <h5 className="mb-2 chart-title">New vs. Old Members</h5>
 
-                
-
                 {/* Custom Dropdown instead of <select> */}
                 <SimpleDropdown
                   options={regionss}

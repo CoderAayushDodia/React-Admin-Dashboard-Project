@@ -68,11 +68,13 @@ function Header({ OpenSidebar, notifications }) {
             </div>
           </div>
         )}
-        <img
-          src="/Avatar.png"
-          alt="Profile photo"
-          className=" d-lg-block d-none"
-        />
+        <a href="/login">
+          <img
+            src="/Avatar.png"
+            alt="Profile photo"
+            className=" d-lg-block d-none"
+          />
+        </a>
       </div>
     </header>
   );

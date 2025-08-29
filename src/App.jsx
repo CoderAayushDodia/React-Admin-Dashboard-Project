@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import "./App.css";
+import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./components/Home";
+import LogIn from "./components/LogIn";
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -25,26 +27,32 @@ function App() {
   };
 
   return (
-    <div className="grid-container position-relative">
-      <Header
-        OpenSidebar={OpenSidebar}
-        regions={dashboardData?.regions || []}
-        notifications={dashboardData?.notifications || []}
-      />
-      <Sidebar
-        openSidebarToggle={openSidebarToggle}
-        OpenSidebar={OpenSidebar}
-        menuItems={dashboardData?.sidebarMenu || []}
-      />
-      <Home
-        stats={dashboardData?.stats || []}
-        memberShipChart={dashboardData?.memberShipChart || []}
-        collectionTrends={dashboardData?.collectionTrends || []}
-        topPerformers={dashboardData?.topPerformers || []}
-        newVsOldMembers={dashboardData?.newVsOldMembers || []}
-        menuDropdown={dashboardData?.menuDropdown || []}
-        financialSummaryYears={dashboardData?.financialSummaryYears || []}
-      />
+    <div>
+      <div className="grid-container position-relative">
+        <Header
+          OpenSidebar={OpenSidebar}
+          regions={dashboardData?.regions || []}
+          notifications={dashboardData?.notifications || []}
+        />
+        <Sidebar
+          openSidebarToggle={openSidebarToggle}
+          OpenSidebar={OpenSidebar}
+          menuItems={dashboardData?.sidebarMenu || []}
+        />
+        <Home
+          stats={dashboardData?.stats || []}
+          memberShipChart={dashboardData?.memberShipChart || []}
+          collectionTrends={dashboardData?.collectionTrends || []}
+          topPerformers={dashboardData?.topPerformers || []}
+          newVsOldMembers={dashboardData?.newVsOldMembers || []}
+          menuDropdown={dashboardData?.menuDropdown || []}
+          financialSummaryYears={dashboardData?.financialSummaryYears || []}
+        />
+        <Routes>
+          <Route path="/" element={<Home/>} />
+          <Route path="/login" element={<LogIn />} />
+        </Routes>
+      </div>
     </div>
   );
 }
