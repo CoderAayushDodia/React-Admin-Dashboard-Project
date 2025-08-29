@@ -42,6 +42,8 @@ function App() {
         collectionTrends={dashboardData?.collectionTrends || []}
         topPerformers={dashboardData?.topPerformers || []}
         newVsOldMembers={dashboardData?.newVsOldMembers || []}
+        menuDropdown={dashboardData?.menuDropdown || []}
+        financialSummaryYears={dashboardData?.financialSummaryYears || []}
       />
     </div>
   );

@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 // import { regionsData } from "../data/regions";
 
-function NestedSelect({ regions }) {
+function NestedSelect({ regions, onSelect }) {
   const [open, setOpen] = useState(false);
   const [openRegions, setOpenRegions] = useState({});
-  const [selected, setSelected] = useState("Regions");
+  const [selectedLabel, setSelectedLabel] = useState("Regions");
   const dropdownRef = useRef(null);
 
   const toggleRegion = (name) => {
@@ -15,26 +15,31 @@ function NestedSelect({ regions }) {
   };
 
   const handleSelect = (item) => {
-    setSelected(item);
+    setSelectedLabel(item.name || "Regions");
     setOpen(false); // close dropdown after selecting
+    if (typeof onSelect === "function") onSelect(item);
   };
 
   const renderRegions = (items) => {
     return (
-      <ul className="list-unstyled ms-3 mb-0 cursor-pointer">
+      <ul className="list-unstyled ms-2 mb-0 cursor-pointer">
         {items.map((item, index) => (
-          <li key={index}>
+          <li key={`${item.name}-${index}`}>
             <div
               className="d-flex align-items-center cursor-pointer"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 if (item.children) {
-                  toggleRegion(item.name); // expand/collapse children
+                  toggleRegion(item.name);
                 } else if (item.monthly || item.annually) {
-                  handleSelect(item); // select leaf node with data
+                  handleSelect(item);
+                } else {
+                  // if there are nodes with no children and no monthly/annually, still select by name
+                  handleSelect(item);
                 }
               }}
             >
-              <span className="me-2">
+              <span className="">
                 {item.children ? (
                   openRegions[item.name] ? (
                     <i className="fa fa-angle-down text-muted"></i>
@@ -80,17 +85,18 @@ function NestedSelect({ regions }) {
     >
       {/* Fake select box */}
       <div
-        className="cursor-pointer d-inline-flex align-items-center custom-select"
+        className="cursor-pointer d-flex align-items-center justify-content-between custom-select flex-1"
         onClick={() => setOpen((prev) => !prev)}
+        style={{ minWidth: 140 }}
       >
-        {selected}
-        <i className="fa fa-angle-down ms-2"></i>
+        {selectedLabel}
+        <i className="fa fa-angle-down flex-1"></i>
       </div>
 
       {open && (
         <div
           className="position-absolute bg-white border rounded shadow p-1 cursor-pointer"
-          style={{ top: "100%", left: 0, width: "180px", zIndex: 1000 }}
+          style={{ top: "100%", left: 0, width: "140px", zIndex: 1000 }}
         >
           {renderRegions(regions)}
         </div>
@@ -100,91 +106,3 @@ function NestedSelect({ regions }) {
 }
 
 export default NestedSelect;
-
-// // const NestedSelect = ({ regions, onSelect }) => {
-
-//   import React, { useState } from "react";
-
-// const NestedSelect = ({ regions, onSelect }) => {
-//   const [selectedPath, setSelectedPath] = useState([]);
-
-//   const handleChange = (level, value) => {
-//     const newPath = selectedPath.slice(0, level);
-//     newPath[level] = value;
-//     setSelectedPath(newPath);
-
-//     let node = null;
-//     let list = regions;
-
-//     for (let name of newPath) {
-//       node = list.find((r) => r.name === name);
-//       if (!node) break;
-//       list = node.children || [];
-//     }
-
-//     if (node) onSelect(node);
-//   };
-
-//   const dropdowns = [];
-//   let level = 0;
-//   let list = regions;
-
-//   while (list && list.length > 0) {
-//     dropdowns.push(
-//       <select
-//         key={level}
-//         className="form-select mb-2"
-//         value={selectedPath[level] || ""}
-//         onChange={(e) => handleChange(level, e.target.value)}
-//       >
-//         <option value="">Select</option>
-//         {list.map((r) => (
-//           <option key={r.name} value={r.name}>
-//             {r.name}
-//           </option>
-//         ))}
-//       </select>
-//     );
-
-//     const selected = list.find((r) => r.name === selectedPath[level]);
-//     list = selected?.children || null;
-//     level++;
-//   }
-
-//   return <div>{dropdowns}</div>;
-// };
-
-// export default NestedSelect;
-
-// //   return (
-// //     <select
-// //       onChange={(e) => {
-// //         const selectedName = e.target.value;
-
-// //         // Find object recursively
-// //         const findRegion = (nodes, name) => {
-// //           for (let node of nodes) {
-// //             if (node.name === name) return node;
-// //             if (node.children) {
-// //               const found = findRegion(node.children, name);
-// //               if (found) return found;
-// //             }
-// //           }
-// //           return null;
-// //         };
-
-// //         const regionObj = findRegion(regions, selectedName);
-// //         onSelect(regionObj);
-// //       }}
-// //     >
-// //       <option value="">Select region</option>
-// //       {regions.map((region) => (
-// //         <option key={region.name} value={region.name}>
-// //           {region.name}
-// //         </option>
-// //       ))}
-// //     </select>
-// //   );
-// // };
-
-// // export default NestedSelect;

@@ -272,19 +272,21 @@ select:focus {
   font-weight: normal;
 }
 
-.btn {
-  width: 100%;
-  background: #e63946;
+input[type="radio"] {
+  accent-color: #e32124; /* Bootstrap blue */
+}
+
+.btn1 {
+  background: #e32124;
   color: #fff;
   border: none;
-  padding: 10px;
-  border-radius: 8px;
   font-size: 15px;
   cursor: pointer;
 }
 
-.btn:hover {
+.btn1:hover {
   background: #d62828;
+  color: #fff;
 }
 
 .report-container {
@@ -325,10 +327,10 @@ select:focus {
   background-color: #e32124;
 }
 
-.chart-3 canvas {
+/* .chart-3 canvas {
   height: 380px !important;
   width: 100% !important;
-}
+} */
 
 .custom-select {
   border: 1px solid #d5d7da;
@@ -346,6 +348,41 @@ select:focus {
   font-size: 18px;
   font-weight: bolder;
   color: #e32124;
+}
+
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown-selected {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+  z-index: 10;
+}
+
+.dropdown-option {
+  padding: 6px 12px;
+}
+
+.dropdown-option:hover {
+  background: #f1f1f1;
 }
 
 /* Medium <= 992px */
@@ -393,6 +430,7 @@ select:focus {
     display: flex !important;
   }
 }
+
 
 @media screen and (max-width: 768px) {
   .sidebar-list,
@@ -445,7 +483,7 @@ select:focus {
     left: 0;
     width: 100%;
     padding: 16px;
-    background: #fff; 
+    background: #fff;
   }
 
   .receipt-announcement-div {
@@ -456,7 +494,7 @@ select:focus {
   }
 
   .receipt-announcement-div li {
-    flex: 1; 
+    flex: 1;
     margin: 0;
   }
 
@@ -467,25 +505,25 @@ select:focus {
   }
   .report-container-wrapper li {
     display: grid;
-    text-align: center;
+    /* text-align: center; */
     margin: 0;
   }
   .report-container {
-    top: auto; 
-    bottom: 80px; 
+    top: auto;
+    bottom: 80px;
     left: 16px;
     right: 16px;
-    width: auto; 
-    max-width: none;
-    margin: 0 auto;
+    /* width: auto;  */
+    min-width: 200px;
+    /* margin: 0 16px; */
   }
-  .nofication-modal {
+  .notification-modal {
     /* left: auto; */
     right: 16px;
     left: 16px;
-    width: auto;
-    max-width: none;
+    min-width: 200px;
   }
+ 
 }
 @media screen and (max-width: 391px) {
   .receipt-announcement-div li a {
