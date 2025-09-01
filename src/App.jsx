@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -9,7 +9,6 @@ import LogIn from "./components/LogIn";
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
   const [dashboardData, setDashboardData] = useState(null);
-  
 
   useEffect(() => {
     fetch("/dashboardData.json")
@@ -28,9 +27,15 @@ function App() {
   };
 
   return (
-
     <Routes>
-      <Route path="/login" element={<div className="login-wrapper"><LogIn /></div>} />
+      <Route
+        path="/login"
+        element={
+          <div className="login-wrapper">
+            <LogIn />
+          </div>
+        }
+      />
 
       <Route
         path="/"
@@ -59,7 +64,6 @@ function App() {
         }
       />
     </Routes>
-
   );
 }
 
