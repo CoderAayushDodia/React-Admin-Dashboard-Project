@@ -1,7 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function LogIn() {
   const [language, setLanguage] = useState("mr");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const texts = {
     en: {
@@ -30,31 +36,79 @@ function LogIn() {
     },
   };
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(
+        "https://shramjivi-backend.onrender.com/api/auth/login/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phone,
+            password,
+          }),
+        }
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      console.log("Login successful:", data);
+
+      localStorage.setItem("token", data.access || data.token);
+
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login error", err);
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    // <div className="login-wrapper">
-      <div className="login-container">
-        <img src="/image 5.png" alt="Logo" />
+    <div className="login-container">
+      <img src="/image 5.png" alt="Logo" />
 
-        <div className="title-text">
-          <h1 className="mb-4">श्रमजीवी संघटना (महाराष्ट्र)</h1>
-          <h2 className="mb-2">{texts[language].loginTitle}</h2>
-          <p>{texts[language].welcome}</p>
-        </div>
+      <div className="title-text">
+        <h1 className="mb-4">श्रमजीवी संघटना (महाराष्ट्र)</h1>
+        <h2 className="mb-2">{texts[language].loginTitle}</h2>
+        <p>{texts[language].welcome}</p>
+      </div>
 
-        <form action="/" className="form-group mt-4 mb-3">
-          <label htmlFor="username mb-2">{texts[language].username}</label>
-          <input
-            type="text"
-            id="username"
-            placeholder={texts[language].usernamePlaceholder}
-            className="mb-3"
-          />
+      <form action="/" className="form-group mt-4 mb-3" onSubmit={handleLogin}>
+        <label htmlFor="username mb-2">{texts[language].username}</label>
+        <input
+          type="text"
+          id="username"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder={texts[language].usernamePlaceholder}
+          className="mb-3"
+          required
+        />
 
-          <label htmlFor="password" className="mb-2">
-            {texts[language].password}
-          </label>
-          <input type="password" id="password" placeholder="********" />
-        </form>
+        <label htmlFor="password" className="mb-2">
+          {texts[language].password}
+        </label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="********"
+          required
+        />
+
+        {error && <div className="error-text text-danger mb-2">{error}</div>}
 
         <div className="d-flex justify-content-between align-items-center language">
           <div>
@@ -62,12 +116,14 @@ function LogIn() {
           </div>
           <div className="language-switch rounded-5 d-flex gap-1 shadow-sm">
             <button
+              type="button"
               className={`lang-btn ${language === "en" ? "active" : ""}`}
               onClick={() => setLanguage("en")}
             >
               {texts[language].eng}
             </button>
             <button
+              type="button"
               className={`lang-btn ${language === "mr" ? "active" : ""}`}
               onClick={() => setLanguage("mr")}
             >
@@ -76,9 +132,11 @@ function LogIn() {
           </div>
         </div>
 
-        <button className="login-btn">Log In</button>
-      </div>
-    // </div>
+        <button type="submit" className="login-btn" disabled={loading}>
+          {loading ? "Logging In..." : "Log In"}
+        </button>
+      </form>
+    </div>
   );
 }
 
