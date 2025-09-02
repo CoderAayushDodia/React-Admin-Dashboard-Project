@@ -42,12 +42,27 @@ function LogIn() {
     setError("");
 
     try {
+      // const response = await fetch(
+      //   "shramjivi-backend.onrender.com/api/auth/login/",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Accept": "application/json",
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       phone,
+      //       password,
+      //     }),
+      //   }
+      // );
+
       const response = await fetch(
         "https://shramjivi-backend.onrender.com/api/auth/login/",
         {
           method: "POST",
           headers: {
-            "Accept": "application/json",
+            Accept: "application/json",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -57,7 +72,7 @@ function LogIn() {
         }
       );
       const data = await response.json();
-       console.log("Response:", data);
+      console.log("Response:", data);
 
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
