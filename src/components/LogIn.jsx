@@ -47,6 +47,7 @@ function LogIn() {
         {
           method: "POST",
           headers: {
+            "Accept": "application/json",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -56,16 +57,22 @@ function LogIn() {
         }
       );
       const data = await response.json();
+       console.log("Response:", data);
 
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
 
+      localStorage.setItem("accessToken", data.access);
+      localStorage.setItem("refreshToken", data.refresh);
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("userId", data.user_id);
+
       console.log("Login successful:", data);
 
       localStorage.setItem("token", data.access || data.token);
 
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       console.error("Login error", err);
       setError(err.message || "Something went wrong");
@@ -101,6 +108,7 @@ function LogIn() {
         </label>
         <input
           type="password"
+          className="mb-3"
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
