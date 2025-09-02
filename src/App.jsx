@@ -11,7 +11,7 @@ function App() {
   const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
-    fetch("./dashboardData.json")
+    fetch("/dashboardData.json")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to load JSON");
@@ -27,33 +27,43 @@ function App() {
   };
 
   return (
-    <div>
-      <div className="grid-container position-relative">
-        <Header
-          OpenSidebar={OpenSidebar}
-          regions={dashboardData?.regions || []}
-          notifications={dashboardData?.notifications || []}
-        />
-        <Sidebar
-          openSidebarToggle={openSidebarToggle}
-          OpenSidebar={OpenSidebar}
-          menuItems={dashboardData?.sidebarMenu || []}
-        />
-        <Home
-          stats={dashboardData?.stats || []}
-          memberShipChart={dashboardData?.memberShipChart || []}
-          collectionTrends={dashboardData?.collectionTrends || []}
-          topPerformers={dashboardData?.topPerformers || []}
-          newVsOldMembers={dashboardData?.newVsOldMembers || []}
-          menuDropdown={dashboardData?.menuDropdown || []}
-          financialSummaryYears={dashboardData?.financialSummaryYears || []}
-        />
-        <Routes>
-          <Route path="/" element={<Home/>} />
-          <Route path="/login" element={<LogIn />} />
-        </Routes>
-      </div>
-    </div>
+    <Routes>
+      <Route
+        path="/login"
+        element={
+          <div className="login-wrapper">
+            <LogIn />
+          </div>
+        }
+      />
+
+      <Route
+        path="/"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <Home
+              stats={dashboardData?.stats || []}
+              memberShipChart={dashboardData?.memberShipChart || []}
+              collectionTrends={dashboardData?.collectionTrends || []}
+              topPerformers={dashboardData?.topPerformers || []}
+              newVsOldMembers={dashboardData?.newVsOldMembers || []}
+              menuDropdown={dashboardData?.menuDropdown || []}
+              financialSummaryYears={dashboardData?.financialSummaryYears || []}
+            />
+          </div>
+        }
+      />
+    </Routes>
   );
 }
 

@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+body{
+  min-width: none;
+  min-height: none;
+  place-items: none;
+  display: block;
+}
+
 .close-icon {
   display: none;
 }
@@ -385,6 +392,127 @@ input[type="radio"] {
   background: #f1f1f1;
 }
 
+.login-container {
+  background: #fff;
+  padding: 2rem;
+  max-width: 500px;
+  /* width: 90%; */
+  text-align: center;
+  margin: 0 auto;
+}
+
+.login-container img {
+  object-fit: contain;
+  height: 90px;
+  width: 81px;
+  margin-bottom: 0.5rem;
+}
+
+.title-text h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #e32124;
+}
+.title-text p {
+  color: #535862;
+}
+
+.login-container h2 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.language{
+  margin-bottom: 40px;
+}
+
+.language div span{
+  color: #535862;
+}
+
+.language-switch {
+  font-size: 0.9rem;
+  border: 2px solid #D5D7DA;
+  padding: 3px 8px;
+}
+
+.lang-btn {
+  border: none;
+  padding: 5px 9px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #535862;
+ background-color: #fff;
+ font-weight: 600;
+}
+
+.lang-btn.active {
+  background: #e32124;
+  color: #fff;
+} 
+
+.eng-btn{
+  padding-left: 3px;
+}
+
+.login-btn {
+  background: #e32124;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background: #c62828;
+}
+
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  min-height: 100vh; 
+  /* background: #f9fafc;
+  margin: 0 auto;
+  max-width: 500px; 
+  width: 100%; */
+}
+
+/* Responsive */
+/* @media (max-width: 480px) {
+      .login-container {
+        padding: 1.5rem;
+        max-width: 90%;
+      }
+    } */
+
 /* Medium <= 992px */
 @media screen and (max-width: 992px) {
   .grid-container {
@@ -430,7 +558,6 @@ input[type="radio"] {
     display: flex !important;
   }
 }
-
 
 @media screen and (max-width: 768px) {
   .sidebar-list,
@@ -523,7 +650,6 @@ input[type="radio"] {
     left: 16px;
     min-width: 200px;
   }
- 
 }
 @media screen and (max-width: 391px) {
   .receipt-announcement-div li a {

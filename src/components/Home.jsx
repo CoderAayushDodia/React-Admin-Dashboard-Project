@@ -118,6 +118,23 @@ function Home() {
     datasets: topPerformers.datasets,
   };
 
+  const topPerformersOptions = {
+    responsive: true,
+    maintainAspectRatio: false, // allows flexible sizing
+    cutout: "65%", // hole size (inner radius)
+    radius: "90%", // outer size
+    plugins: {
+      legend: {
+        position: "right",
+        labels: {
+          usePointStyle: true, // <-- use circle instead of square
+          pointStyle: "circle",
+          font: { size: 14 },
+        },
+      },
+    },
+  };
+
   // New vs Old Members Stacked Bar Chart
   const newVsOldConfig = newVsOldMembers[region1][timeFrame2];
 
@@ -131,6 +148,7 @@ function Home() {
 
   const newVsOldOptions = {
     responsive: true,
+    elements: { bar: { borderRadius: 6 } },
     plugins: {
       legend: {
         labels: {
@@ -397,22 +415,11 @@ function Home() {
 
           {/* Top Performers Doughnut Chart */}
           <div className="col-md-6 mb-4">
-            <div className="chart-box p-3 rounded-3 shadow-sm bg-white">
+            <div className="chart-box p-3 rounded-3 shadow-sm bg-white" style={{ width: "100%", height: "380px" }}>
               <h5>Top Performers</h5>
               <Doughnut
                 data={topPerformersConfig}
-                options={{
-                  plugins: {
-                    legend: {
-                      position: "right",
-                      labels: {
-                        usePointStyle: true,
-                        pointStyle: "circle",
-                      },
-                    },
-                  },
-                  maintainAspectRatio: true, // 🔑 allows custom width/height
-                }}
+                options={topPerformersOptions}
               />
             </div>
           </div>
