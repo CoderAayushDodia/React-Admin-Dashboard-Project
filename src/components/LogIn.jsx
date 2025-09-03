@@ -87,7 +87,7 @@ function LogIn() {
 
       localStorage.setItem("token", data.access || data.token);
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       console.error("Login error", err);
       setError(err.message || "Something went wrong");
