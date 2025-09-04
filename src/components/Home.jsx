@@ -777,64 +777,7 @@ function Home() {
 
   const regionss = ["Mumbai", "Satara"];
 
-  // Fetch API Data
-  // useEffect(() => {
-  //   async function getUserData() {
-  //     try {
-  //       const url = " ";
-  //       // const response = await fetch(url);
-  //       const response = await fetch(url, {
-  //       method: "GET",
-  //       credentials: "include", // ✅ This sends browser cookies (refresh_token)
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         // Add authorization header if needed
-  //         // "Authorization": `Bearer ${accessToken}`,
-  //       },
-  //     });
-  //       if (!response.ok) throw new Error("Failed to fetch data");
-  //       const data = await response.json();
-  //       setDashboardData(data);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError(err.message);
-  //       setLoading(false);
-  //     }
-  //   }
-  //   getUserData();
-  // }, []);
-
-  //   useEffect(() => {
-  //   async function getUserData() {
-  //     try {
-  //       const url = "https://shramjivi-backend.onrender.com/api/dashboard/";
-
-  //       const response = await fetch(url, {
-  //         method: "GET",
-  //         credentials: "include", // ✅ This sends browser cookies (refresh_token)
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           // Add authorization header if needed
-  //           // "Authorization": `Bearer ${accessToken}`,
-  //         },
-  //       });
-
-  //       if (!response.ok) throw new Error("Failed to fetch data");
-
-  //       const data = await response.json();
-  //       setDashboardData(data);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError(err.message);
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   getUserData();
-  // }, []);
-
+  
   useEffect(() => {
     async function getUserData() {
       try {
@@ -934,59 +877,7 @@ function Home() {
     }
   };
 
-  // Collection Trends Chart
-  // const getCollectionChartData = (timeFrame, selectedRegion) => {
-  //   if (!collection_trends) return { labels: [], datasets: [] };
-
-  //   // Region-specific data
-  //   if (selectedRegion && collection_trends.region) {
-  //     const regionData = collection_trends.region.find(
-  //       (r) => r.taluka__name === selectedRegion.name
-  //     );
-  //     return {
-  //       labels: [selectedRegion.name],
-  //       datasets: [
-  //         {
-  //           label: "Collections",
-  //           data: [regionData ? regionData.total : 0],
-  //           backgroundColor: "rgba(54, 162, 235, 0.6)",
-  //         },
-  //       ],
-  //     };
-  //   }
-
-  //   // Overall monthly/yearly data
-  //   if (timeFrame === "monthly") {
-  //     const labels = collection_trends.monthly.map(
-  //       (item) => `Month ${item.month}`
-  //     );
-  //     const data = collection_trends.monthly.map((item) => item.total);
-  //     return {
-  //       labels,
-  //       datasets: [
-  //         {
-  //           label: "Collections",
-  //           data,
-  //           backgroundColor: "lightgray",
-  //         },
-  //       ],
-  //     };
-  //   } else {
-  //     const labels = collection_trends.yearly.map((item) => `${item.year}`);
-  //     const data = collection_trends.yearly.map((item) => item.total);
-  //     return {
-  //       labels,
-  //       datasets: [
-  //         {
-  //           label: "Collections",
-  //           data,
-  //           backgroundColor: "lightgray",
-  //         },
-  //       ],
-  //     };
-  //   }
-  // };
-
+  
   const getCollectionChartData = (timeFrame, selectedRegion) => {
   const monthlyData = collection_trends.monthly;
   const yearlyData = collection_trends.yearly;
