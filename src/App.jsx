@@ -29,7 +29,7 @@ function App() {
   return (
     <Routes>
       <Route
-        path="/login"
+        path="/"
         element={
           <div className="login-wrapper">
             <LogIn />
@@ -38,7 +38,7 @@ function App() {
       />
 
       <Route
-        path="/"
+        path="/dashboard"
         element={
           <div className="grid-container position-relative">
             <Header
