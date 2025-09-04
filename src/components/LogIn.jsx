@@ -61,6 +61,7 @@ function LogIn() {
         "https://shramjivi-backend.onrender.com/api/auth/login/",
         {
           method: "POST",
+          credentials: "include",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",

@@ -15,7 +15,7 @@ function NestedSelect({ regions, onSelect }) {
   };
 
   const handleSelect = (item) => {
-    setSelectedLabel(item.name || "Regions");
+    setSelectedLabel(item.taluka__name || "Regions");
     setOpen(false); // close dropdown after selecting
     if (typeof onSelect === "function") onSelect(item);
   };
@@ -24,13 +24,13 @@ function NestedSelect({ regions, onSelect }) {
     return (
       <ul className="list-unstyled ms-2 mb-0 cursor-pointer">
         {items.map((item, index) => (
-          <li key={`${item.name}-${index}`}>
+          <li key={item.taluka__id ?? `region-${index}`}>
             <div
               className="d-flex align-items-center cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 if (item.children) {
-                  toggleRegion(item.name);
+                  toggleRegion(item.taluka__name);
                 } else if (item.monthly || item.annually) {
                   handleSelect(item);
                 } else {
@@ -41,7 +41,7 @@ function NestedSelect({ regions, onSelect }) {
             >
               <span className="">
                 {item.children ? (
-                  openRegions[item.name] ? (
+                  openRegions[item.taluka__name] ? (
                     <i className="fa fa-angle-down text-muted"></i>
                   ) : (
                     <i className="fa fa-angle-right text-muted"></i>
@@ -53,11 +53,11 @@ function NestedSelect({ regions, onSelect }) {
                   ></i>
                 )}
               </span>
-              <span>{item.name}</span>
+              <span>{item.taluka__name}</span>
             </div>
 
             {item.children &&
-              openRegions[item.name] &&
+              openRegions[item.taluka__name] &&
               renderRegions(item.children)}
           </li>
         ))}

@@ -486,7 +486,7 @@
 //                               value="old"
 //                               checked={selected === "old"}
 //                               onChange={(e) => setSelected(e.target.value)}
-//                             />{" "}
+//                             />
 //                             Old Donor
 //                           </label>
 //                           <label>
@@ -805,65 +805,64 @@ function Home() {
   //   getUserData();
   // }, []);
 
-//   useEffect(() => {
-//   async function getUserData() {
-//     try {
-//       const url = "https://shramjivi-backend.onrender.com/api/dashboard/";
+  //   useEffect(() => {
+  //   async function getUserData() {
+  //     try {
+  //       const url = "https://shramjivi-backend.onrender.com/api/dashboard/";
 
-//       const response = await fetch(url, {
-//         method: "GET",
-//         credentials: "include", // ✅ This sends browser cookies (refresh_token)
-//         headers: {
-//           "Content-Type": "application/json",
-//           // Add authorization header if needed
-//           // "Authorization": `Bearer ${accessToken}`,
-//         },
-//       });
+  //       const response = await fetch(url, {
+  //         method: "GET",
+  //         credentials: "include", // ✅ This sends browser cookies (refresh_token)
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           // Add authorization header if needed
+  //           // "Authorization": `Bearer ${accessToken}`,
+  //         },
+  //       });
 
-//       if (!response.ok) throw new Error("Failed to fetch data");
+  //       if (!response.ok) throw new Error("Failed to fetch data");
 
-//       const data = await response.json();
-//       setDashboardData(data);
-//       setLoading(false);
-//     } catch (err) {
-//       console.error(err);
-//       setError(err.message);
-//       setLoading(false);
-//     }
-//   }
+  //       const data = await response.json();
+  //       setDashboardData(data);
+  //       setLoading(false);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError(err.message);
+  //       setLoading(false);
+  //     }
+  //   }
 
-//   getUserData();
-// }, []);
+  //   getUserData();
+  // }, []);
 
-useEffect(() => {
-  async function getUserData() {
-    try {
-      const url = "https://shramjivi-backend.onrender.com/api/dashboard/";
+  useEffect(() => {
+    async function getUserData() {
+      try {
+        const url = "https://shramjivi-backend.onrender.com/api/dashboard/";
 
-      const response = await fetch(url, {
-        method: "GET",
-        credentials: "include", // ✅ sends cookies (refresh_token)
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+        const response = await fetch(url, {
+          method: "GET",
+          credentials: "include", // ✅ sends cookies (refresh_token)
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      if (!response.ok) throw new Error(`Failed to fetch data: ${response.status}`);
-      
-      const data = await response.json();
-      setDashboardData(data);
-      setLoading(false);
-    } catch (err) {
-      console.error("API Error:", err);
-      setError(err.message);
-      setLoading(false);
+        if (!response.ok)
+          throw new Error(`Failed to fetch data: ${response.status}`);
+
+        const data = await response.json();
+        setDashboardData(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("API Error:", err);
+        setError(err.message);
+        setLoading(false);
+      }
     }
-  }
 
-  getUserData();
-}, []);
-
-
+    getUserData();
+  }, []);
 
   // Handle region selection
   const handleRegionChange = (regionNode) => setSelectedRegion(regionNode);
@@ -936,57 +935,100 @@ useEffect(() => {
   };
 
   // Collection Trends Chart
-  const getCollectionChartData = (frame, selectedRegion) => {
-    if (!collection_trends) return { labels: [], datasets: [] };
+  // const getCollectionChartData = (timeFrame, selectedRegion) => {
+  //   if (!collection_trends) return { labels: [], datasets: [] };
 
-    // Region-specific data
-    if (selectedRegion && collection_trends.region) {
-      const regionData = collection_trends.region.find(
-        (r) => r.taluka__name === selectedRegion.name
-      );
-      return {
-        labels: [selectedRegion.name],
-        datasets: [
-          {
-            label: "Collections",
-            data: [regionData ? regionData.total : 0],
-            backgroundColor: "rgba(54, 162, 235, 0.6)",
-          },
-        ],
-      };
-    }
+  //   // Region-specific data
+  //   if (selectedRegion && collection_trends.region) {
+  //     const regionData = collection_trends.region.find(
+  //       (r) => r.taluka__name === selectedRegion.name
+  //     );
+  //     return {
+  //       labels: [selectedRegion.name],
+  //       datasets: [
+  //         {
+  //           label: "Collections",
+  //           data: [regionData ? regionData.total : 0],
+  //           backgroundColor: "rgba(54, 162, 235, 0.6)",
+  //         },
+  //       ],
+  //     };
+  //   }
 
-    // Overall monthly/yearly data
-    if (frame === "monthly") {
-      const labels = collection_trends.monthly.map(
-        (item) => `Month ${item.month}`
-      );
-      const data = collection_trends.monthly.map((item) => item.total);
-      return {
-        labels,
-        datasets: [
-          {
-            label: "Collections",
-            data,
-            backgroundColor: "rgba(54, 162, 235, 0.6)",
-          },
-        ],
-      };
-    } else {
-      const labels = collection_trends.yearly.map((item) => `${item.year}`);
-      const data = collection_trends.yearly.map((item) => item.total);
-      return {
-        labels,
-        datasets: [
-          {
-            label: "Collections",
-            data,
-            backgroundColor: "rgba(54, 162, 235, 0.6)",
-          },
-        ],
-      };
-    }
+  //   // Overall monthly/yearly data
+  //   if (timeFrame === "monthly") {
+  //     const labels = collection_trends.monthly.map(
+  //       (item) => `Month ${item.month}`
+  //     );
+  //     const data = collection_trends.monthly.map((item) => item.total);
+  //     return {
+  //       labels,
+  //       datasets: [
+  //         {
+  //           label: "Collections",
+  //           data,
+  //           backgroundColor: "lightgray",
+  //         },
+  //       ],
+  //     };
+  //   } else {
+  //     const labels = collection_trends.yearly.map((item) => `${item.year}`);
+  //     const data = collection_trends.yearly.map((item) => item.total);
+  //     return {
+  //       labels,
+  //       datasets: [
+  //         {
+  //           label: "Collections",
+  //           data,
+  //           backgroundColor: "lightgray",
+  //         },
+  //       ],
+  //     };
+  //   }
+  // };
+
+  const getCollectionChartData = (timeFrame, selectedRegion) => {
+  const monthlyData = collection_trends.monthly;
+  const yearlyData = collection_trends.yearly;
+
+  if (selectedRegion) {
+    // If region selected, just return a single-bar dataset for that region
+    return {
+      labels: [selectedRegion.name],
+      datasets: [
+        {
+          label: `Collections (${timeFrame})`,
+          data: [selectedRegion.total],
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderRadius: 6
+        }
+      ]
+    };
+  }
+
+  // Otherwise show overall trends
+  const dataSource = timeFrame === "monthly" ? monthlyData : yearlyData;
+
+  return {
+    labels: dataSource.map(d => timeFrame === "monthly" ? `Month ${d.month}` : d.year),
+    datasets: [
+      {
+        label: `Collections (${timeFrame})`,
+        data: dataSource.map(d => d.total),
+        backgroundColor: "lightgray",
+        borderRadius: 6
+      }
+    ]
   };
+};
+
+const regionsData = (collection_trends.region || [])
+  .filter(item => item.taluka__name) // removes null names
+  .map(item => ({
+    ...item,
+    name: item.taluka__name // optional: normalize name property
+  }));
+
 
   // Top Performers Chart
   const getTopPerformersChartData = () => {
@@ -999,11 +1041,12 @@ useEffect(() => {
         {
           data,
           backgroundColor: [
-            "rgba(255, 99, 132, 0.6)",
-            "rgba(54, 162, 235, 0.6)",
-            "rgba(255, 206, 86, 0.6)",
-            "rgba(75, 192, 192, 0.6)",
-            "rgba(153, 102, 255, 0.6)",
+            "#e60000",
+            "#ff3333",
+            "#ff4d4d",
+            "#ff6666",
+            "#ff9999",
+            "#ffcccc",
           ],
           borderWidth: 1,
         },
@@ -1042,12 +1085,12 @@ useEffect(() => {
         {
           label: "New Members",
           data: newData,
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          backgroundColor: "red",
         },
         {
           label: "Old Members",
           data: oldData,
-          backgroundColor: "rgba(255, 159, 64, 0.6)",
+          backgroundColor: "lightgray",
         },
       ],
     };
@@ -1082,146 +1125,119 @@ useEffect(() => {
   return (
     <main className="main-container p-lg-3 p-sm-none">
       <div className="container-body rounded-lg-4 p-3">
-        <h3>Dashboard</h3>
+        <div className="main-title d-flex justify-content-between">
+          <h3>Dashboard</h3>
 
-        <ul className="list-unstyled d-lg-inline-flex gap-2 sidebar-list d-sm-block">
-          {" "}
-          <div className="d-lg-flex gap-2 receipt-announcement-div">
-            {" "}
-            <li>
-              {" "}
-              <a
-                href="#!"
-                className="text-decoration-none rounded-2 px-2 px-lg-3 py-2 distribute-btn"
-              >
-                 Distribute Receipts {" "}
-              </a>
-              {" "}
-            </li>
-            {" "}
-            <li>
-              {" "}
-              <a
-                href="#!"
-                className="text-decoration-none rounded-2 px-sm-1 px-md-2 px-lg-3 py-2 send-btn"
-              >
-                 Send Announcement {" "}
-              </a>
-              {" "}
-            </li>
-            {" "}
-          </div>
-          {" "}
-          <div className="report-container-wrapper">
-            {" "}
-            <li className="nav-link-wrapper">
-              {" "}
-              <a
-                onClick={() => setIsReportOpen((prev) => !prev)}
-                href="#!"
-                className="text-decoration-none rounded-2 px-3 py-2 generate-btn"
-              >
-                Generate Report{" "}
-              </a>
-              {" "}
-              <div
-                className={`report-container shadow-lg ${
-                  isReportOpen ? "show" : ""
-                }`}
-              >
-                {" "}
-                <div className="report-title d-flex justify-content-between align-items-center">
-                   <h3>Report Types</h3>
-                  {" "}
-                  <i
-                    className="fa-solid fa-xmark"
-                    onClick={() => setIsReportOpen(false)}
-                    style={{ cursor: "pointer" }}
-                  ></i>
-                  {" "}
+          <ul className="list-unstyled d-lg-inline-flex gap-2 sidebar-list d-sm-block">
+            <div className="d-lg-flex gap-2 receipt-announcement-div">
+              <li>
+                <a
+                  href="#!"
+                  className="text-decoration-none rounded-2 px-2 px-lg-3 py-2 distribute-btn"
+                >
+                  Distribute Receipts
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="#!"
+                  className="text-decoration-none rounded-2 px-sm-1 px-md-2 px-lg-3 py-2 send-btn"
+                >
+                  Send Announcement
+                </a>
+              </li>
+            </div>
+
+            <div className="report-container-wrapper">
+              <li className="nav-link-wrapper">
+                <a
+                  onClick={() => setIsReportOpen((prev) => !prev)}
+                  href="#!"
+                  className="text-decoration-none rounded-2 px-3 py-2 generate-btn"
+                >
+                  Generate Report
+                </a>
+
+                <div
+                  className={`report-container shadow-lg ${
+                    isReportOpen ? "show" : ""
+                  }`}
+                >
+                  <div className="report-title d-flex justify-content-between align-items-center">
+                    <h3>Report Types</h3>
+
+                    <i
+                      className="fa-solid fa-xmark"
+                      onClick={() => setIsReportOpen(false)}
+                      style={{ cursor: "pointer" }}
+                    ></i>
+                  </div>
+
+                  <div className="report-body">
+                    <label htmlFor="report">Report Types</label>
+
+                    <div className="select-box">
+                      <select
+                        id="report"
+                        value={reportType}
+                        onChange={(e) => setReportType(e.target.value)}
+                      >
+                        <option>Membership</option>
+                        <option>Collections</option>
+                        <option>Activist Performance</option>
+                        <option>Daily Report Summaries</option>
+                        <option>New Member Analysis</option>
+                      </select>
+                    </div>
+                    <label htmlFor="summary">Financial Summary</label>
+
+                    <div className="select-box">
+                      <select id="summary">
+                        <option>Year 2025</option>
+                        <option>Year 2024</option>
+                        <option>Year 2023</option>
+                      </select>
+                    </div>
+
+                    {reportType === "New Member Analysis" && (
+                      <>
+                        <label>Donor Type</label>
+
+                        <div className="radio-group">
+                          <label>
+                            <input
+                              type="radio"
+                              name="donor"
+                              value="old"
+                              checked={selected === "old"}
+                              onChange={(e) => setSelected(e.target.value)}
+                            />
+                          </label>
+
+                          <label>
+                            <input
+                              type="radio"
+                              name="donor"
+                              value="new"
+                              checked={selected === "new"}
+                              onChange={(e) => setSelected(e.target.value)}
+                            />
+                            New Donor
+                          </label>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="d-flex justify-content-end">
+                      <button className="btn1 px-4 rounded">Generate</button>
+                    </div>
+                  </div>
                 </div>
-                {" "}
-                <div className="report-body">
-                   <label htmlFor="report">Report Types</label>
-                  {" "}
-                  <div className="select-box">
-                    {" "}
-                    <select
-                      id="report"
-                      value={reportType}
-                      onChange={(e) => setReportType(e.target.value)}
-                    >
-                       <option>Membership</option>
-                       <option>Collections</option>
-                       <option>Activist Performance</option>
-                       <option>Daily Report Summaries</option>
-                       <option>New Member Analysis</option>
-                      {" "}
-                    </select>
-                    {" "}
-                  </div>
-                   <label htmlFor="summary">Financial Summary</label>
-                  {" "}
-                  <div className="select-box">
-                    {" "}
-                    <select id="summary">
-                       <option>Year 2025</option>
-                       <option>Year 2024</option>
-                       <option>Year 2023</option>
-                      {" "}
-                    </select>
-                    {" "}
-                  </div>
-                  {" "}
-                  {reportType === "New Member Analysis" && (
-                    <>
-                       <label>Donor Type</label>
-                      {" "}
-                      <div className="radio-group">
-                        {" "}
-                        <label>
-                          {" "}
-                          <input
-                            type="radio"
-                            name="donor"
-                            value="old"
-                            checked={selected === "old"}
-                            onChange={(e) => setSelected(e.target.value)}
-                          />{" "}
-                          {" "}
-                        </label>
-                        {" "}
-                        <label>
-                          {" "}
-                          <input
-                            type="radio"
-                            name="donor"
-                            value="new"
-                            checked={selected === "new"}
-                            onChange={(e) => setSelected(e.target.value)}
-                          />{" "}
-                           New Donor {" "}
-                        </label>
-                        {" "}
-                      </div>
-                      {" "}
-                    </>
-                  )}
-                  {" "}
-                  <div className="d-flex justify-content-end">
-                     <button className="btn1 px-4 rounded">Generate</button>
-                    {" "}
-                  </div>
-                  {" "}
-                </div>
-                {" "}
-              </div>
-              {" "}
-            </li>
-            {" "}
-          </div>
-          {" "}
-        </ul>
+              </li>
+            </div>
+          </ul>
+        </div>
 
         {/* -------- Summary Cards -------- */}
         <div className="row main-cards">
@@ -1263,121 +1279,143 @@ useEffect(() => {
           </div>
         </div>
 
-        {/* -------- Membership Growth Line Chart -------- */}
-        <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
-          <h5>Membership Growth</h5>
-          <div className="tabs">
-            <button
-              className={timeFrame === "annually" ? "active" : ""}
-              onClick={() => setTimeFrame("annually")}
-            >
-              Annually
-            </button>
-            <button
-              className={timeFrame === "monthly" ? "active" : ""}
-              onClick={() => setTimeFrame("monthly")}
-            >
-              Monthly
-            </button>
+        <div className="charts row mt-4">
+          {/* -------- Membership Growth Line Chart -------- */}
+          <div className="col-md-6 mb-4">
+            <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+              <div className="d-flex align-items-center justify-content-between chart-controls">
+                <h5>Membership Growth</h5>
+                <div className="tabs d-flex">
+                  <button
+                    className={`tab ${
+                      timeFrame === "annually" ? "active" : ""
+                    }`}
+                    onClick={() => setTimeFrame("annually")}
+                  >
+                    Annually
+                  </button>
+                  <button
+                    className={`tab ${timeFrame === "monthly" ? "active" : ""}`}
+                    onClick={() => setTimeFrame("monthly")}
+                  >
+                    Monthly
+                  </button>
+                </div>
+              </div>
+              <Line
+                data={getMembershipChartData(timeFrame)}
+                options={membershipOptions}
+                plugins={[verticalLinePlugin]}
+              />
+            </div>
           </div>
-          <Line
-            data={getMembershipChartData(timeFrame)}
-            options={membershipOptions}
-            plugins={[verticalLinePlugin]}
-          />
-        </div>
 
-        {/* -------- Collection Trends Bar Chart -------- */}
-        <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
-          <h5>Collection Trends</h5>
-          <NestedSelect
-            regions={collection_trends.region || []}
-            onSelect={handleRegionChange}
-          />
-          <div className="tabs">
-            <button
-              className={view === "monthly" ? "active" : ""}
-              onClick={() => setView("monthly")}
-            >
-              Monthly
-            </button>
-            <button
-              className={view === "annually" ? "active" : ""}
-              onClick={() => setView("annually")}
-            >
-              Annually
-            </button>
+          {/* -------- Collection Trends Bar Chart -------- */}
+          <div className="col-md-6 mb-4">
+            <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+              <div className="d-flex align-items-center flex-wrap justify-content-between chart-controls">
+                <h5>Collection Trends</h5>
+                <NestedSelect
+                  regions={regionsData}
+                  onSelect={handleRegionChange}
+                />
+                <div className="tabs tabs1 d-flex">
+                  <button
+                    className={`tab ${view === "monthly" ? "active" : ""}`}
+                    onClick={() => setView("monthly")}
+                  >
+                    Monthly
+                  </button>
+                  <button
+                    className={`tab ${view === "annually" ? "active" : ""}`}
+                    onClick={() => setView("annually")}
+                  >
+                    Annually
+                  </button>
+                </div>
+              </div>
+              <Bar
+                data={getCollectionChartData(view, selectedRegion)}
+                options={{
+                  responsive: true,
+                  scales: { y: { beginAtZero: true } },
+                  borderRadius: 6,
+                }}
+              />
+            </div>
           </div>
-          <Bar
-            data={getCollectionChartData(view, selectedRegion)}
-            options={{
-              responsive: true,
-              scales: { y: { beginAtZero: true } },
-              borderRadius: 6,
-            }}
-          />
-        </div>
 
-        {/* -------- Top Performers Doughnut Chart -------- */}
-        <div
-          className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4"
-          style={{ height: "380px" }}
-        >
-          <h5>Top Performers</h5>
-          <Doughnut
-            data={getTopPerformersChartData()}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              cutout: "65%",
-              radius: "90%",
-              plugins: {
-                legend: {
-                  position: "right",
-                  labels: {
-                    usePointStyle: true,
-                    pointStyle: "circle",
-                    font: { size: 14 },
+          {/* -------- Top Performers Doughnut Chart -------- */}
+          <div className="col-md-6 mb-4">
+            <div
+              className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4"
+              style={{ height: "380px" }}
+            >
+              <h5>Top Performers</h5>
+              <Doughnut
+                data={getTopPerformersChartData()}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  cutout: "65%",
+                  radius: "90%",
+                  plugins: {
+                    legend: {
+                      position: "right",
+                      labels: {
+                        usePointStyle: true,
+                        pointStyle: "circle",
+                        font: { size: 14 },
+                      },
+                    },
                   },
-                },
-              },
-            }}
-          />
-        </div>
-
-        {/* -------- New vs Old Members Stacked Bar Chart -------- */}
-        <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
-          <h5>New vs Old Members</h5>
-          <SimpleDropdown
-            options={regionss}
-            selected={region1}
-            onChange={setRegion1}
-          />
-          <div className="tabs">
-            <button
-              className={timeFrame2 === "annually" ? "active" : ""}
-              onClick={() => setTimeFrame2("annually")}
-            >
-              Annually
-            </button>
-            <button
-              className={timeFrame2 === "monthly" ? "active" : ""}
-              onClick={() => setTimeFrame2("monthly")}
-            >
-              Monthly
-            </button>
+                }}
+              />
+            </div>
           </div>
-          <Bar
-            data={getNewVsOldChartData(timeFrame2)}
-            options={{
-              responsive: true,
-              scales: {
-                x: { stacked: true },
-                y: { stacked: true, beginAtZero: true },
-              },
-              elements: { bar: { borderRadius: 6 } },
-            }}
-          />
+
+          {/* -------- New vs Old Members Stacked Bar Chart -------- */}
+          <div className="col-md-6 mb-4">
+            <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+              <div className="d-flex align-items-center flex-wrap justify-content-between chart-controls">
+                <h5>New vs Old Members</h5>
+                <SimpleDropdown
+                  options={regionss}
+                  selected={region1}
+                  onChange={setRegion1}
+                />
+                <div className="tabs d-flex tabs1">
+                  <button
+                    className={`tab ${
+                      timeFrame2 === "annually" ? "active" : ""
+                    }`}
+                    onClick={() => setTimeFrame2("annually")}
+                  >
+                    Annually
+                  </button>
+                  <button
+                    className={`tab ${
+                      timeFrame2 === "monthly" ? "active" : ""
+                    }`}
+                    onClick={() => setTimeFrame2("monthly")}
+                  >
+                    Monthly
+                  </button>
+                </div>
+              </div>
+              <Bar
+                data={getNewVsOldChartData(timeFrame2)}
+                options={{
+                  responsive: true,
+                  scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true },
+                  },
+                  elements: { bar: { borderRadius: 6 } },
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </main>
