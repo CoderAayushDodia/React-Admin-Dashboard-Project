@@ -3,38 +3,31 @@
     {
       "name": "Dashboard Home",
       "link": "/dashboard",
-      "active": true,
-      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+      "active": true
     },
     {
       "name": "Activists Management",
-      "link": "/activists",
-      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+      "link": "/activists"
     },
     {
       "name": "Sabhasad Management",
-      "link": "/sabhasad",
-      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+      "link": "/sabhasad"
     },
     {
       "name": "Receipts Management",
-      "link": "/receipts",
-      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+      "link": "/receipts"
     },
     {
       "name": "Announcements",
-      "link": "/announcements",
-      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+      "link": "/announcements"
     },
     {
       "name": "Report Management",
-      "link": "/reports",
-      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+      "link": "/reports"
     },
     {
       "name": "User Management",
-      "link": "/users",
-      "children": ["Overview", "Notifications", "Analytics", "Reports"]
+      "link": "/users"
     }
   ],
 
@@ -114,38 +107,110 @@
 
   "newVsOldMembers": {
     "Satara": {
-    "monthly": {
-      "labels": ["Gondi","Vel","Puravana","Sankop","Uripa","Nikurva","Mahuva"],
-      "datasets": [
-        { "label": "New", "data": [10,12,9,11,10,8,14], "backgroundColor": "red", "borderRadius": 6 },
-        { "label": "Old", "data": [20,18,22,19,21,23,17], "backgroundColor": "lightgray", "borderRadius": 6 }
-      ]
+      "monthly": {
+        "labels": [
+          "Gondi",
+          "Vel",
+          "Puravana",
+          "Sankop",
+          "Uripa",
+          "Nikurva",
+          "Mahuva"
+        ],
+        "datasets": [
+          {
+            "label": "New",
+            "data": [10, 12, 9, 11, 10, 8, 14],
+            "backgroundColor": "red",
+            "borderRadius": 6
+          },
+          {
+            "label": "Old",
+            "data": [20, 18, 22, 19, 21, 23, 17],
+            "backgroundColor": "lightgray",
+            "borderRadius": 6
+          }
+        ]
+      },
+      "annually": {
+        "labels": [
+          "Gondi",
+          "Vel",
+          "Puravana",
+          "Sankop",
+          "Uripa",
+          "Nikurva",
+          "Mahuva"
+        ],
+        "datasets": [
+          {
+            "label": "New",
+            "data": [100, 120, 90, 110, 100, 80, 140],
+            "backgroundColor": "red",
+            "borderRadius": 6
+          },
+          {
+            "label": "Old",
+            "data": [200, 180, 220, 190, 210, 230, 170],
+            "backgroundColor": "lightgray",
+            "borderRadius": 6
+          }
+        ]
+      }
     },
-    "annually": {
-      "labels": ["Gondi","Vel","Puravana","Sankop","Uripa","Nikurva","Mahuva"],
-      "datasets": [
-        { "label": "New", "data": [100,120,90,110,100,80,140], "backgroundColor": "red", "borderRadius": 6 },
-        { "label": "Old", "data": [200,180,220,190,210,230,170], "backgroundColor": "lightgray", "borderRadius": 6 }
-      ]
+    "Mumbai": {
+      "monthly": {
+        "labels": [
+          "Gondi",
+          "Vel",
+          "Puravana",
+          "Sankop",
+          "Uripa",
+          "Nikurva",
+          "Mahuva"
+        ],
+        "datasets": [
+          {
+            "label": "New",
+            "data": [5, 6, 8, 4, 7, 5, 6],
+            "backgroundColor": "red",
+            "borderRadius": 6
+          },
+          {
+            "label": "Old",
+            "data": [15, 12, 18, 14, 16, 13, 17],
+            "backgroundColor": "lightgray",
+            "borderRadius": 6
+          }
+        ]
+      },
+      "annually": {
+        "labels": [
+          "Gondi",
+          "Vel",
+          "Puravana",
+          "Sankop",
+          "Uripa",
+          "Nikurva",
+          "Mahuva"
+        ],
+        "datasets": [
+          {
+            "label": "New",
+            "data": [50, 60, 80, 40, 70, 50, 60],
+            "backgroundColor": "red",
+            "borderRadius": 6
+          },
+          {
+            "label": "Old",
+            "data": [150, 120, 180, 140, 160, 130, 170],
+            "backgroundColor": "lightgray",
+            "borderRadius": 6
+          }
+        ]
+      }
     }
   },
-  "Mumbai": {
-    "monthly": {
-      "labels": ["Gondi","Vel","Puravana","Sankop","Uripa","Nikurva","Mahuva"],
-      "datasets": [
-        { "label": "New", "data": [5,6,8,4,7,5,6], "backgroundColor": "red", "borderRadius": 6 },
-        { "label": "Old", "data": [15,12,18,14,16,13,17], "backgroundColor": "lightgray", "borderRadius": 6 }
-      ]
-    },
-    "annually": {
-      "labels": ["Gondi","Vel","Puravana","Sankop","Uripa","Nikurva","Mahuva"],
-      "datasets": [
-        { "label": "New", "data": [50,60,80,40,70,50,60], "backgroundColor": "red", "borderRadius": 6 },
-        { "label": "Old", "data": [150,120,180,140,160,130,170], "backgroundColor": "lightgray", "borderRadius": 6 }
-      ]
-    }
-  }
-},
 
   "notifications": [
     {
@@ -175,17 +240,17 @@
     }
   ],
 
-    "reportTypes": ["Membership", "Financial Summary"],
-    "financialSummaryYears": ["2023","2024", "2025"],
-    "donorTypes": ["Old Donor", "New Donor"],
+  "reportTypes": ["Membership", "Financial Summary"],
+  "financialSummaryYears": ["2023", "2024", "2025"],
+  "donorTypes": ["Old Donor", "New Donor"],
 
-    "menuDropdown": [
-      "Membership",
-      "Collections",
-      "Activist Performance",
-      "Daily Report Summaries",
-      "New member Analysis"
-    ],
+  "menuDropdown": [
+    "Membership",
+    "Collections",
+    "Activist Performance",
+    "Daily Report Summaries",
+    "New member Analysis"
+  ],
 
   "roles": [
     "Vice President",
@@ -194,7 +259,7 @@
     "Taluka President Secretary",
     "Head, Member"
   ],
-   
+
   "regions": [
     {
       "name": "Nasik",
@@ -208,11 +273,27 @@
                 {
                   "name": "Pongari",
                   "monthly": {
-                    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    "labels": [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec"
+                    ],
                     "datasets": [
                       {
                         "label": "Collection",
-                        "data": [100, 120, 150, 130, 180, 200, 190, 80, 90, 110, 140, 170],
+                        "data": [
+                          100, 120, 150, 130, 180, 200, 190, 80, 90, 110, 140,
+                          170
+                        ],
                         "backgroundColor": "rgba(231, 76, 60, 0.7)"
                       }
                     ]
@@ -231,11 +312,27 @@
                 {
                   "name": "Sillwad",
                   "monthly": {
-                    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    "labels": [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec"
+                    ],
                     "datasets": [
                       {
                         "label": "Collection",
-                        "data": [80, 95, 110, 120, 150, 170, 140, 130, 180, 115, 125, 135],
+                        "data": [
+                          80, 95, 110, 120, 150, 170, 140, 130, 180, 115, 125,
+                          135
+                        ],
                         "backgroundColor": "rgba(52, 152, 219, 0.7)"
                       }
                     ]
@@ -254,11 +351,27 @@
                 {
                   "name": "Perikona",
                   "monthly": {
-                    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    "labels": [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec"
+                    ],
                     "datasets": [
                       {
                         "label": "Collection",
-                        "data": [90, 100, 120, 140, 160, 180, 85, 80, 110, 130, 190, 150],
+                        "data": [
+                          90, 100, 120, 140, 160, 180, 85, 80, 110, 130, 190,
+                          150
+                        ],
                         "backgroundColor": "rgba(46, 204, 113, 0.7)"
                       }
                     ]
@@ -277,11 +390,26 @@
                 {
                   "name": "Bengori",
                   "monthly": {
-                    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    "labels": [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec"
+                    ],
                     "datasets": [
                       {
                         "label": "Collection",
-                        "data": [70, 85, 95, 110, 130, 150, 75, 80, 90, 100, 120, 140],
+                        "data": [
+                          70, 85, 95, 110, 130, 150, 75, 80, 90, 100, 120, 140
+                        ],
                         "backgroundColor": "rgba(155, 89, 182, 0.7)"
                       }
                     ]
@@ -306,11 +434,26 @@
     {
       "name": "Konkan",
       "monthly": {
-        "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        "labels": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec"
+        ],
         "datasets": [
           {
             "label": "Collection",
-            "data": [150, 170, 200, 220, 250, 300, 230, 270, 290, 100, 180, 210],
+            "data": [
+              150, 170, 200, 220, 250, 300, 230, 270, 290, 100, 180, 210
+            ],
             "backgroundColor": "rgba(241, 196, 15, 0.7)"
           }
         ]
@@ -326,8 +469,89 @@
         ]
       }
     }
-  ]
-  
-  
-} 
+  ],
 
+  "ActivistManagement": [
+  {
+    "id": 1,
+    "name": "Ram Pratap Singh",
+    "role": "Treasurer",
+    "region": "Latur",
+    "mobile": "+91 96767 46567",
+    "status": "Active"
+  },
+  {
+    "id": 2,
+    "name": "Vishnu Ohalwar",
+    "role": "President",
+    "region": "Nasik",
+    "mobile": "+91 65021 46567",
+    "status": "Inactive"
+  },
+  {
+    "id": 3,
+    "name": "Shreya Shetty",
+    "role": "President",
+    "region": "Mumbai",
+    "mobile": "+91 89632 08523",
+    "status": "Active"
+  },
+  {
+    "id": 4,
+    "name": "Priya Ramani",
+    "role": "District President",
+    "region": "Pune",
+    "mobile": "+91 97652 08651",
+    "status": "Inactive"
+  },
+  {
+    "id": 5,
+    "name": "Chandrashekhar Gokhale",
+    "role": "Treasurer",
+    "region": "Pipari",
+    "mobile": "+91 99866 23467",
+    "status": "Active"
+  },
+  {
+    "id": 6,
+    "name": "Nandita Singh",
+    "role": "Head Member",
+    "region": "Konkan",
+    "mobile": "+91 90342 90492",
+    "status": "Inactive"
+  },
+  {
+    "id": 7,
+    "name": "Abhay Bjk",
+    "role": "State President",
+    "region": "Khandala",
+    "mobile": "+91 89453 09432",
+    "status": "Active"
+  },
+  {
+    "id": 8,
+    "name": "Om Prakash Sinha",
+    "role": "Treasurer",
+    "region": "Matheran",
+    "mobile": "+91 86642 24944",
+    "status": "Inactive"
+  },
+  {
+    "id": 9,
+    "name": "Aanandi Singala",
+    "role": "Secretary",
+    "region": "Pune",
+    "mobile": "+91 65326 88876",
+    "status": "Active"
+  },
+  {
+    "id": 10,
+    "name": "Kate Morrison",
+    "role": "Head Member",
+    "region": "Mumbai",
+    "mobile": "+91 99661 50294",
+    "status": "Active"
+  }
+]
+
+}

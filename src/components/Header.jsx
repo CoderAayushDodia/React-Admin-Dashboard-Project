@@ -68,7 +68,7 @@ function Header({ OpenSidebar, notifications }) {
             </div>
           </div>
         )}
-        <a href="/login">
+        <a href="/">
           <img
             src="/Avatar.png"
             alt="Profile photo"
