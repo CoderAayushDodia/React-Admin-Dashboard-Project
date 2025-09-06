@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
@@ -6,10 +6,12 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import LogIn from "./components/LogIn";
 import ActivistManagement from "./components/ActivistManagement";
+import AddActivist from "./components/AddActivist";
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
   const [dashboardData, setDashboardData] = useState(null);
+  const [activists, setActivists] = useState([]);
 
   useEffect(() => {
     fetch("/dashboardData.json")
@@ -22,6 +24,13 @@ function App() {
       .then((data) => setDashboardData(data))
       .catch((err) => console.error("Error loading JSON:", err));
   }, []);
+
+  const addNewActivist = (newActivist) => {
+    setActivists((prev) => [
+      ...prev,
+      { ...newActivist, id: Date.now(), status: "Active" },
+    ]);
+  };
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -78,7 +87,27 @@ function App() {
               OpenSidebar={OpenSidebar}
               menuItems={dashboardData?.sidebarMenu || []}
             />
-            <ActivistManagement />
+            <ActivistManagement activists={activists}/>
+          </div>
+        }
+      />
+
+      {/* Add Activist */}
+      <Route
+        path="/activists/add"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <AddActivist addNewActivist={addNewActivist} />
           </div>
         }
       />
