@@ -549,7 +549,8 @@ input[type="radio"] {
 }
 
 .download-btn,
-.add-activist-btn, .apply-btn {
+.add-activist-btn,
+.apply-btn {
   background-color: #fff;
   border: 1px solid #e32124;
   color: #e32124;
@@ -572,6 +573,15 @@ input[type="radio"] {
 .apply-btn:hover {
   background-color: #e32124;
   border: 1px solid #e32124;
+  color: #fff;
+}
+
+.add-activist-save-btn, .add-activist-cancel-btn {
+  width: 100px;
+}
+
+.add-activist-save-btn{
+  background-color: #e32124;
   color: #fff;
 }
 
@@ -748,7 +758,7 @@ input[type="radio"] {
     right: 0;
     background: white;
     display: flex;
-    
+
     padding: 0.75rem 1rem;
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -767,7 +777,7 @@ input[type="radio"] {
   .select-date input {
     width: 100px;
   }
-  .header-title h2{
+  .header-title h2 {
     font-size: 14px;
   }
 }

@@ -1,14 +1,16 @@
-//import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-//import dashboardData from "../../public/dashboardData.json"; // Import JSON
+import dashboardData from "../../public/dashboardData.json"; // Import JSON
 
-function ActivistManagement({ activists }) {
+function ActivistManagement() {
   const navigate = useNavigate();
+  const [activists, setActivists] = useState([]);
+  
 
-  // useEffect(() => {
-  //   setActivists(dashboardData.ActivistManagement || []);
-  // }, []);
+  useEffect(() => {
+    setActivists(dashboardData.ActivistManagement || []);
+  }, []);
 
   return (
     <div className="main-container p-3">
@@ -18,13 +20,13 @@ function ActivistManagement({ activists }) {
 
           <div className="d-flex gap-2 activist-action-buttons">
             <button className="download-btn">
-              <i className="fa-solid fa-download me-1"></i> Download
+             Download <i className="fa-solid fa-download me-1"></i> 
             </button>
             <button
               className="add-activist-btn"
               onClick={() => navigate("/activists/add")}
             >
-              <i className="fa-solid fa-plus me-1"></i> Add Activist
+               Add Activist <i className="fa-solid fa-plus me-1"></i>
             </button>
           </div>
         </div>

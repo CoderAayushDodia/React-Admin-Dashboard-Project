@@ -25,20 +25,27 @@ function AddActivist({ addNewActivist }) {
 
   return (
     <div className="main-container p-3">
-      <div className="">
-        <div className="d-flex justify-content-between align-items-center mb-3 pt-3 px-3">
+      <div className="container-body mb-4 d-lg-block d-md-block d-none">
+        <div className="add-activist-header d-lg-flex d-md-flex d-none align-items-center gap-2 pt-3 px-3 ">
+          <span class="material-symbols-outlined">home</span>
+          <i className="fa fa-angle-right"></i>
+          <p className="mb-0">Activists Management</p>
+          <i className="fa fa-angle-right"></i>
+          <p className="mb-0">Add Activist</p>
+        </div>
+        <div className="d-flex justify-content-between align-items-center mb-2 pt-3 px-3">
           <h4>Add Activist</h4>
-          <div>
+          <div className="d-flex gap-2 activist-action-buttons">
             <button
               type="button"
-              className="btn btn-outline-secondary me-2"
+              className="btn btn-outline-secondary me-2 add-activist-save-btn"
               onClick={() => navigate("/activists")}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="btn btn-danger"
+              className="btn btn-danger add-activist-save-btn"
               onClick={handleSubmit}
             >
               Save
@@ -46,11 +53,35 @@ function AddActivist({ addNewActivist }) {
           </div>
         </div>
       </div>
+
+      <div className="d-flex justify-content-between align-items-center mb-lg-2 mb-md-2 mb-0 pt-lg-3 pt-md-2 pt-0 px-3 d-lg-none d-md-none d-flex">
+          <h4 className="d-lg-block d-md-block d-none">Add Activist</h4>
+          <div className="d-flex gap-2 activist-action-buttons">
+            <button
+              type="button"
+              className="btn btn-outline-secondary me-2 add-activist-cancel-btn"
+              onClick={() => navigate("/activists")}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="add-activist-save-btn"
+              onClick={handleSubmit}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+
       <div className="container-body">
         <form action="#" className="p-3">
           <div className="row g-3">
             <div className="col-md-4">
-              <label className="form-label">Name*</label>
+              <h4 className="d-lg-none d-md-none d-block">Add Activist</h4>
+              <label className="form-label">
+                Name <span className="text-danger fw-bold">*</span>
+              </label>
               <input
                 type="text"
                 name="name"
@@ -61,7 +92,9 @@ function AddActivist({ addNewActivist }) {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label">Role*</label>
+              <label className="form-label">
+                Role <span className="text-danger fw-bold">*</span>
+              </label>
               <select
                 type="text"
                 name="role"
@@ -86,7 +119,9 @@ function AddActivist({ addNewActivist }) {
             </div>
 
             <div className="col-md-4">
-              <label className="form-label">Region*</label>
+              <label className="form-label">
+                Region <span className="text-danger fw-bold">*</span>
+              </label>
               <select
                 name="region"
                 className="form-select"
@@ -102,7 +137,9 @@ function AddActivist({ addNewActivist }) {
             </div>
 
             <div className="col-md-4">
-              <label className="form-label">Mobile*</label>
+              <label className="form-label">
+                Mobile <span className="text-danger fw-bold">*</span>
+              </label>
               <input
                 type="text"
                 name="mobile"
@@ -113,7 +150,9 @@ function AddActivist({ addNewActivist }) {
               />
             </div>
             <div className="col-md-4 position-relative">
-              <label className="form-label">Password*</label>
+              <label className="form-label">
+                Password <span className="text-danger fw-bold">*</span>
+              </label>
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="**********"
