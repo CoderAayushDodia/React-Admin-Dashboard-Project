@@ -730,7 +730,7 @@
 
 // export default Home;
 
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
 import NestedSelect from "./NestedSelect";
 import SimpleDropdown from "./SimpleDropdown";
 import {
@@ -760,666 +760,557 @@ Chart.register(
 );
 
 function Home() {
-  // API Data State
-  const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+//   // API Data State
+//   const [dashboardData, setDashboardData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
 
-  // UI State
-  const [timeFrame, setTimeFrame] = useState("monthly");
-  const [view, setView] = useState("monthly");
-  const [timeFrame2, setTimeFrame2] = useState("monthly");
-  const [region1, setRegion1] = useState(null);
-  const [selectedRegion, setSelectedRegion] = useState(null);
-  const [isReportOpen, setIsReportOpen] = useState(false);
-  const [selected, setSelected] = useState("new");
-  const [reportType, setReportType] = useState("Membership");
+//   // UI State
+//   const [timeFrame, setTimeFrame] = useState("monthly");
+//   const [view, setView] = useState("monthly");
+//   const [timeFrame2, setTimeFrame2] = useState("monthly");
+//   const [region1, setRegion1] = useState(null);
+//   const [selectedRegion, setSelectedRegion] = useState(null);
+//   const [isReportOpen, setIsReportOpen] = useState(false);
+//   const [selected, setSelected] = useState("new");
+//   const [reportType, setReportType] = useState("Membership");
 
-  const regionss = ["Mumbai", "Satara"];
+//   const regionss = ["Mumbai", "Satara"];
 
-  // Fetch API Data
-  // useEffect(() => {
-  //   async function getUserData() {
-  //     try {
-  //       const url = " ";
-  //       // const response = await fetch(url);
-  //       const response = await fetch(url, {
-  //       method: "GET",
-  //       credentials: "include", // ✅ This sends browser cookies (refresh_token)
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         // Add authorization header if needed
-  //         // "Authorization": `Bearer ${accessToken}`,
-  //       },
-  //     });
-  //       if (!response.ok) throw new Error("Failed to fetch data");
-  //       const data = await response.json();
-  //       setDashboardData(data);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError(err.message);
-  //       setLoading(false);
-  //     }
-  //   }
-  //   getUserData();
-  // }, []);
+  
+//   useEffect(() => {
+//     async function getUserData() {
+//       try {
+//         const url = "https://shramjivi-backend.onrender.com/api/dashboard/";
 
-  //   useEffect(() => {
-  //   async function getUserData() {
-  //     try {
-  //       const url = "https://shramjivi-backend.onrender.com/api/dashboard/";
+//         const response = await fetch(url, {
+//           method: "GET",
+//           credentials: "include", // ✅ sends cookies (refresh_token)
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         });
 
-  //       const response = await fetch(url, {
-  //         method: "GET",
-  //         credentials: "include", // ✅ This sends browser cookies (refresh_token)
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           // Add authorization header if needed
-  //           // "Authorization": `Bearer ${accessToken}`,
-  //         },
-  //       });
+//         if (!response.ok)
+//           throw new Error(`Failed to fetch data: ${response.status}`);
 
-  //       if (!response.ok) throw new Error("Failed to fetch data");
+//         const data = await response.json();
+//         setDashboardData(data);
+//         setLoading(false);
+//       } catch (err) {
+//         console.error("API Error:", err);
+//         setError(err.message);
+//         setLoading(false);
+//       }
+//     }
 
-  //       const data = await response.json();
-  //       setDashboardData(data);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError(err.message);
-  //       setLoading(false);
-  //     }
-  //   }
+//     getUserData();
+//   }, []);
 
-  //   getUserData();
-  // }, []);
+//   // Handle region selection
+//   const handleRegionChange = (regionNode) => setSelectedRegion(regionNode);
 
-  useEffect(() => {
-    async function getUserData() {
-      try {
-        const url = "https://shramjivi-backend.onrender.com/api/dashboard/";
+//   // Handle click outside report dropdown
+//   useEffect(() => {
+//     const handleClickOutside = (e) => {
+//       if (!e.target.closest(".nav-link-wrapper")) setIsReportOpen(false);
+//     };
+//     document.addEventListener("click", handleClickOutside);
+//     return () => document.removeEventListener("click", handleClickOutside);
+//   }, []);
 
-        const response = await fetch(url, {
-          method: "GET",
-          credentials: "include", // ✅ sends cookies (refresh_token)
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+//   if (loading) return <p>Loading...</p>;
+//   if (error) return <p>Error: {error}</p>;
 
-        if (!response.ok)
-          throw new Error(`Failed to fetch data: ${response.status}`);
+//   // Destructure API data
+//   const {
+//     summary,
+//     membership_growth,
+//     collection_trends,
+//     top_performers,
+//     new_vs_old,
+//   } = dashboardData;
 
-        const data = await response.json();
-        setDashboardData(data);
-        setLoading(false);
-      } catch (err) {
-        console.error("API Error:", err);
-        setError(err.message);
-        setLoading(false);
-      }
-    }
+//   // ------------------ Helper Functions ------------------
 
-    getUserData();
-  }, []);
+//   // Membership Growth Chart
+//   const getMembershipChartData = (frame) => {
+//     if (!membership_growth) return { labels: [], datasets: [] };
+//     if (frame === "monthly") {
+//       const labels = membership_growth.monthly.map((item) => `Day ${item.day}`);
+//       const data = membership_growth.monthly.map((item) => item.total);
+//       return {
+//         labels,
+//         datasets: [
+//           {
+//             label: "Members",
+//             data,
+//             borderColor: "red",
+//             backgroundColor: "rgba(255,0,0,0.2)",
+//             fill: false,
+//             tension: 0.5,
+//             pointRadius: 0,
+//             pointHoverRadius: 5,
+//           },
+//         ],
+//       };
+//     } else {
+//       const labels = membership_growth.yearly.map(
+//         (item) => `Month ${item.month}`
+//       );
+//       const data = membership_growth.yearly.map((item) => item.total);
+//       return {
+//         labels,
+//         datasets: [
+//           {
+//             label: "Members",
+//             data,
+//             borderColor: "red",
+//             backgroundColor: "rgba(255,0,0,0.2)",
+//             fill: false,
+//             tension: 0.5,
+//             pointRadius: 0,
+//             pointHoverRadius: 5,
+//           },
+//         ],
+//       };
+//     }
+//   };
 
-  // Handle region selection
-  const handleRegionChange = (regionNode) => setSelectedRegion(regionNode);
+  
+//   const getCollectionChartData = (timeFrame, selectedRegion) => {
+//   const monthlyData = collection_trends.monthly;
+//   const yearlyData = collection_trends.yearly;
 
-  // Handle click outside report dropdown
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (!e.target.closest(".nav-link-wrapper")) setIsReportOpen(false);
-    };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+//   if (selectedRegion) {
+//     // If region selected, just return a single-bar dataset for that region
+//     return {
+//       labels: [selectedRegion.name],
+//       datasets: [
+//         {
+//           label: `Collections (${timeFrame})`,
+//           data: [selectedRegion.total],
+//           backgroundColor: "rgba(75, 192, 192, 0.6)",
+//           borderRadius: 6
+//         }
+//       ]
+//     };
+//   }
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+//   // Otherwise show overall trends
+//   const dataSource = timeFrame === "monthly" ? monthlyData : yearlyData;
 
-  // Destructure API data
-  const {
-    summary,
-    membership_growth,
-    collection_trends,
-    top_performers,
-    new_vs_old,
-  } = dashboardData;
+//   return {
+//     labels: dataSource.map(d => timeFrame === "monthly" ? `Month ${d.month}` : d.year),
+//     datasets: [
+//       {
+//         label: `Collections (${timeFrame})`,
+//         data: dataSource.map(d => d.total),
+//         backgroundColor: "lightgray",
+//         borderRadius: 6
+//       }
+//     ]
+//   };
+// };
 
-  // ------------------ Helper Functions ------------------
-
-  // Membership Growth Chart
-  const getMembershipChartData = (frame) => {
-    if (!membership_growth) return { labels: [], datasets: [] };
-    if (frame === "monthly") {
-      const labels = membership_growth.monthly.map((item) => `Day ${item.day}`);
-      const data = membership_growth.monthly.map((item) => item.total);
-      return {
-        labels,
-        datasets: [
-          {
-            label: "Members",
-            data,
-            borderColor: "red",
-            backgroundColor: "rgba(255,0,0,0.2)",
-            fill: false,
-            tension: 0.5,
-            pointRadius: 0,
-            pointHoverRadius: 5,
-          },
-        ],
-      };
-    } else {
-      const labels = membership_growth.yearly.map(
-        (item) => `Month ${item.month}`
-      );
-      const data = membership_growth.yearly.map((item) => item.total);
-      return {
-        labels,
-        datasets: [
-          {
-            label: "Members",
-            data,
-            borderColor: "red",
-            backgroundColor: "rgba(255,0,0,0.2)",
-            fill: false,
-            tension: 0.5,
-            pointRadius: 0,
-            pointHoverRadius: 5,
-          },
-        ],
-      };
-    }
-  };
-
-  // Collection Trends Chart
-  // const getCollectionChartData = (timeFrame, selectedRegion) => {
-  //   if (!collection_trends) return { labels: [], datasets: [] };
-
-  //   // Region-specific data
-  //   if (selectedRegion && collection_trends.region) {
-  //     const regionData = collection_trends.region.find(
-  //       (r) => r.taluka__name === selectedRegion.name
-  //     );
-  //     return {
-  //       labels: [selectedRegion.name],
-  //       datasets: [
-  //         {
-  //           label: "Collections",
-  //           data: [regionData ? regionData.total : 0],
-  //           backgroundColor: "rgba(54, 162, 235, 0.6)",
-  //         },
-  //       ],
-  //     };
-  //   }
-
-  //   // Overall monthly/yearly data
-  //   if (timeFrame === "monthly") {
-  //     const labels = collection_trends.monthly.map(
-  //       (item) => `Month ${item.month}`
-  //     );
-  //     const data = collection_trends.monthly.map((item) => item.total);
-  //     return {
-  //       labels,
-  //       datasets: [
-  //         {
-  //           label: "Collections",
-  //           data,
-  //           backgroundColor: "lightgray",
-  //         },
-  //       ],
-  //     };
-  //   } else {
-  //     const labels = collection_trends.yearly.map((item) => `${item.year}`);
-  //     const data = collection_trends.yearly.map((item) => item.total);
-  //     return {
-  //       labels,
-  //       datasets: [
-  //         {
-  //           label: "Collections",
-  //           data,
-  //           backgroundColor: "lightgray",
-  //         },
-  //       ],
-  //     };
-  //   }
-  // };
-
-  const getCollectionChartData = (timeFrame, selectedRegion) => {
-  const monthlyData = collection_trends.monthly;
-  const yearlyData = collection_trends.yearly;
-
-  if (selectedRegion) {
-    // If region selected, just return a single-bar dataset for that region
-    return {
-      labels: [selectedRegion.name],
-      datasets: [
-        {
-          label: `Collections (${timeFrame})`,
-          data: [selectedRegion.total],
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderRadius: 6
-        }
-      ]
-    };
-  }
-
-  // Otherwise show overall trends
-  const dataSource = timeFrame === "monthly" ? monthlyData : yearlyData;
-
-  return {
-    labels: dataSource.map(d => timeFrame === "monthly" ? `Month ${d.month}` : d.year),
-    datasets: [
-      {
-        label: `Collections (${timeFrame})`,
-        data: dataSource.map(d => d.total),
-        backgroundColor: "lightgray",
-        borderRadius: 6
-      }
-    ]
-  };
-};
-
-const regionsData = (collection_trends.region || [])
-  .filter(item => item.taluka__name) // removes null names
-  .map(item => ({
-    ...item,
-    name: item.taluka__name // optional: normalize name property
-  }));
+// const regionsData = (collection_trends.region || [])
+//   .filter(item => item.taluka__name) // removes null names
+//   .map(item => ({
+//     ...item,
+//     name: item.taluka__name // optional: normalize name property
+//   }));
 
 
-  // Top Performers Chart
-  const getTopPerformersChartData = () => {
-    if (!top_performers) return { labels: [], datasets: [] };
-    const labels = top_performers.map((item) => item.created_by__name);
-    const data = top_performers.map((item) => item.total);
-    return {
-      labels,
-      datasets: [
-        {
-          data,
-          backgroundColor: [
-            "#e60000",
-            "#ff3333",
-            "#ff4d4d",
-            "#ff6666",
-            "#ff9999",
-            "#ffcccc",
-          ],
-          borderWidth: 1,
-        },
-      ],
-    };
-  };
+//   // Top Performers Chart
+//   const getTopPerformersChartData = () => {
+//     if (!top_performers) return { labels: [], datasets: [] };
+//     const labels = top_performers.map((item) => item.created_by__name);
+//     const data = top_performers.map((item) => item.total);
+//     return {
+//       labels,
+//       datasets: [
+//         {
+//           data,
+//           backgroundColor: [
+//             "#e60000",
+//             "#ff3333",
+//             "#ff4d4d",
+//             "#ff6666",
+//             "#ff9999",
+//             "#ffcccc",
+//           ],
+//           borderWidth: 1,
+//         },
+//       ],
+//     };
+//   };
 
-  // New vs Old Members Chart
-  const getNewVsOldChartData = (frame) => {
-    if (!new_vs_old) return { labels: [], datasets: [] };
+//   // New vs Old Members Chart
+//   const getNewVsOldChartData = (frame) => {
+//     if (!new_vs_old) return { labels: [], datasets: [] };
 
-    const dataArray = new_vs_old[frame] || [];
-    const labels = [
-      ...new Set(dataArray.map((item) => item.month || item.day)),
-    ].map((l) => `Month ${l}`);
+//     const dataArray = new_vs_old[frame] || [];
+//     const labels = [
+//       ...new Set(dataArray.map((item) => item.month || item.day)),
+//     ].map((l) => `Month ${l}`);
 
-    const newData = labels.map((label) => {
-      const monthNumber = parseInt(label.replace("Month ", ""));
-      const item = dataArray.find(
-        (d) => d.status === "new" && (d.month || d.day) === monthNumber
-      );
-      return item ? item.total : 0;
-    });
+//     const newData = labels.map((label) => {
+//       const monthNumber = parseInt(label.replace("Month ", ""));
+//       const item = dataArray.find(
+//         (d) => d.status === "new" && (d.month || d.day) === monthNumber
+//       );
+//       return item ? item.total : 0;
+//     });
 
-    const oldData = labels.map((label) => {
-      const monthNumber = parseInt(label.replace("Month ", ""));
-      const item = dataArray.find(
-        (d) => d.status === "old" && (d.month || d.day) === monthNumber
-      );
-      return item ? item.total : 0;
-    });
+//     const oldData = labels.map((label) => {
+//       const monthNumber = parseInt(label.replace("Month ", ""));
+//       const item = dataArray.find(
+//         (d) => d.status === "old" && (d.month || d.day) === monthNumber
+//       );
+//       return item ? item.total : 0;
+//     });
 
-    return {
-      labels,
-      datasets: [
-        {
-          label: "New Members",
-          data: newData,
-          backgroundColor: "red",
-        },
-        {
-          label: "Old Members",
-          data: oldData,
-          backgroundColor: "lightgray",
-        },
-      ],
-    };
-  };
+//     return {
+//       labels,
+//       datasets: [
+//         {
+//           label: "New Members",
+//           data: newData,
+//           backgroundColor: "red",
+//         },
+//         {
+//           label: "Old Members",
+//           data: oldData,
+//           backgroundColor: "lightgray",
+//         },
+//       ],
+//     };
+//   };
 
-  // ------------------ Chart Options ------------------
-  const membershipOptions = {
-    responsive: true,
-    scales: { y: { beginAtZero: false } },
-  };
-  const verticalLinePlugin = {
-    id: "verticalLine",
-    afterDatasetsDraw: (chart) => {
-      if (chart.tooltip?._active && chart.tooltip._active.length > 0) {
-        const ctx = chart.ctx;
-        const activePoint = chart.tooltip._active[0].element;
-        const x = activePoint.x;
-        const topY = chart.scales.y.top;
-        const bottomY = chart.scales.y.bottom;
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(x, topY);
-        ctx.lineTo(x, bottomY);
-        ctx.lineWidth = 1.5;
-        ctx.strokeStyle = "red";
-        ctx.stroke();
-        ctx.restore();
-      }
-    },
-  };
+//   // ------------------ Chart Options ------------------
+//   const membershipOptions = {
+//     responsive: true,
+//     scales: { y: { beginAtZero: false } },
+//   };
+//   const verticalLinePlugin = {
+//     id: "verticalLine",
+//     afterDatasetsDraw: (chart) => {
+//       if (chart.tooltip?._active && chart.tooltip._active.length > 0) {
+//         const ctx = chart.ctx;
+//         const activePoint = chart.tooltip._active[0].element;
+//         const x = activePoint.x;
+//         const topY = chart.scales.y.top;
+//         const bottomY = chart.scales.y.bottom;
+//         ctx.save();
+//         ctx.beginPath();
+//         ctx.moveTo(x, topY);
+//         ctx.lineTo(x, bottomY);
+//         ctx.lineWidth = 1.5;
+//         ctx.strokeStyle = "red";
+//         ctx.stroke();
+//         ctx.restore();
+//       }
+//     },
+//   };
 
-  return (
-    <main className="main-container p-lg-3 p-sm-none">
-      <div className="container-body rounded-lg-4 p-3">
-        <div className="main-title d-flex justify-content-between">
-          <h3>Dashboard</h3>
+//   return (
+//     <main className="main-container p-lg-3 p-sm-none">
+//       <div className="container-body rounded-lg-4 p-3">
+//         <div className="main-title d-flex justify-content-between">
+//           <h3>Dashboard</h3>
 
-          <ul className="list-unstyled d-lg-inline-flex gap-2 sidebar-list d-sm-block">
-            <div className="d-lg-flex gap-2 receipt-announcement-div">
-              <li>
-                <a
-                  href="#!"
-                  className="text-decoration-none rounded-2 px-2 px-lg-3 py-2 distribute-btn"
-                >
-                  Distribute Receipts
-                </a>
-              </li>
+//           <ul className="list-unstyled d-lg-inline-flex gap-2 sidebar-list d-sm-block">
+//             <div className="d-lg-flex gap-2 receipt-announcement-div">
+//               <li>
+//                 <a
+//                   href="#!"
+//                   className="text-decoration-none rounded-2 px-2 px-lg-3 py-2 distribute-btn"
+//                 >
+//                   Distribute Receipts
+//                 </a>
+//               </li>
 
-              <li>
-                <a
-                  href="#!"
-                  className="text-decoration-none rounded-2 px-sm-1 px-md-2 px-lg-3 py-2 send-btn"
-                >
-                  Send Announcement
-                </a>
-              </li>
-            </div>
+//               <li>
+//                 <a
+//                   href="#!"
+//                   className="text-decoration-none rounded-2 px-sm-1 px-md-2 px-lg-3 py-2 send-btn"
+//                 >
+//                   Send Announcement
+//                 </a>
+//               </li>
+//             </div>
 
-            <div className="report-container-wrapper">
-              <li className="nav-link-wrapper">
-                <a
-                  onClick={() => setIsReportOpen((prev) => !prev)}
-                  href="#!"
-                  className="text-decoration-none rounded-2 px-3 py-2 generate-btn"
-                >
-                  Generate Report
-                </a>
+//             <div className="report-container-wrapper">
+//               <li className="nav-link-wrapper">
+//                 <a
+//                   onClick={() => setIsReportOpen((prev) => !prev)}
+//                   href="#!"
+//                   className="text-decoration-none rounded-2 px-3 py-2 generate-btn"
+//                 >
+//                   Generate Report
+//                 </a>
 
-                <div
-                  className={`report-container shadow-lg ${
-                    isReportOpen ? "show" : ""
-                  }`}
-                >
-                  <div className="report-title d-flex justify-content-between align-items-center">
-                    <h3>Report Types</h3>
+//                 <div
+//                   className={`report-container shadow-lg ${
+//                     isReportOpen ? "show" : ""
+//                   }`}
+//                 >
+//                   <div className="report-title d-flex justify-content-between align-items-center">
+//                     <h3>Report Types</h3>
 
-                    <i
-                      className="fa-solid fa-xmark"
-                      onClick={() => setIsReportOpen(false)}
-                      style={{ cursor: "pointer" }}
-                    ></i>
-                  </div>
+//                     <i
+//                       className="fa-solid fa-xmark"
+//                       onClick={() => setIsReportOpen(false)}
+//                       style={{ cursor: "pointer" }}
+//                     ></i>
+//                   </div>
 
-                  <div className="report-body">
-                    <label htmlFor="report">Report Types</label>
+//                   <div className="report-body">
+//                     <label htmlFor="report">Report Types</label>
 
-                    <div className="select-box">
-                      <select
-                        id="report"
-                        value={reportType}
-                        onChange={(e) => setReportType(e.target.value)}
-                      >
-                        <option>Membership</option>
-                        <option>Collections</option>
-                        <option>Activist Performance</option>
-                        <option>Daily Report Summaries</option>
-                        <option>New Member Analysis</option>
-                      </select>
-                    </div>
-                    <label htmlFor="summary">Financial Summary</label>
+//                     <div className="select-box">
+//                       <select
+//                         id="report"
+//                         value={reportType}
+//                         onChange={(e) => setReportType(e.target.value)}
+//                       >
+//                         <option>Membership</option>
+//                         <option>Collections</option>
+//                         <option>Activist Performance</option>
+//                         <option>Daily Report Summaries</option>
+//                         <option>New Member Analysis</option>
+//                       </select>
+//                     </div>
+//                     <label htmlFor="summary">Financial Summary</label>
 
-                    <div className="select-box">
-                      <select id="summary">
-                        <option>Year 2025</option>
-                        <option>Year 2024</option>
-                        <option>Year 2023</option>
-                      </select>
-                    </div>
+//                     <div className="select-box">
+//                       <select id="summary">
+//                         <option>Year 2025</option>
+//                         <option>Year 2024</option>
+//                         <option>Year 2023</option>
+//                       </select>
+//                     </div>
 
-                    {reportType === "New Member Analysis" && (
-                      <>
-                        <label>Donor Type</label>
+//                     {reportType === "New Member Analysis" && (
+//                       <>
+//                         <label>Donor Type</label>
 
-                        <div className="radio-group">
-                          <label>
-                            <input
-                              type="radio"
-                              name="donor"
-                              value="old"
-                              checked={selected === "old"}
-                              onChange={(e) => setSelected(e.target.value)}
-                            />
-                          </label>
+//                         <div className="radio-group">
+//                           <label>
+//                             <input
+//                               type="radio"
+//                               name="donor"
+//                               value="old"
+//                               checked={selected === "old"}
+//                               onChange={(e) => setSelected(e.target.value)}
+//                             />
+//                           </label>
 
-                          <label>
-                            <input
-                              type="radio"
-                              name="donor"
-                              value="new"
-                              checked={selected === "new"}
-                              onChange={(e) => setSelected(e.target.value)}
-                            />
-                            New Donor
-                          </label>
-                        </div>
-                      </>
-                    )}
+//                           <label>
+//                             <input
+//                               type="radio"
+//                               name="donor"
+//                               value="new"
+//                               checked={selected === "new"}
+//                               onChange={(e) => setSelected(e.target.value)}
+//                             />
+//                             New Donor
+//                           </label>
+//                         </div>
+//                       </>
+//                     )}
 
-                    <div className="d-flex justify-content-end">
-                      <button className="btn1 px-4 rounded">Generate</button>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </div>
-          </ul>
-        </div>
+//                     <div className="d-flex justify-content-end">
+//                       <button className="btn1 px-4 rounded">Generate</button>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </li>
+//             </div>
+//           </ul>
+//         </div>
 
-        {/* -------- Summary Cards -------- */}
-        <div className="row main-cards">
-          <div className="cards">
-            <div className="card-inner rounded-3 p-3">
-              <h4>Total Activists</h4>
-              <span>{summary.total_activists}</span>
-            </div>
-          </div>
-          <div className="cards">
-            <div className="card-inner rounded-3 p-3">
-              <h4>Total Members</h4>
-              <span>{summary.total_members}</span>
-            </div>
-          </div>
-          <div className="cards">
-            <div className="card-inner rounded-3 p-3">
-              <h4>Collections This Month</h4>
-              <span>{summary.collections_this_month}</span>
-            </div>
-          </div>
-          <div className="cards">
-            <div className="card-inner rounded-3 p-3">
-              <h4>Collections This Year</h4>
-              <span>{summary.collections_this_year}</span>
-            </div>
-          </div>
-          <div className="cards">
-            <div className="card-inner rounded-3 p-3">
-              <h4>New Daily Reports</h4>
-              <span>{summary.new_daily_reports}</span>
-            </div>
-          </div>
-          <div className="cards">
-            <div className="card-inner rounded-3 p-3">
-              <h4>New Members Ratio (%)</h4>
-              <span>{summary.new_members_ratio}</span>
-            </div>
-          </div>
-        </div>
+//         {/* -------- Summary Cards -------- */}
+//         <div className="row main-cards">
+//           <div className="cards">
+//             <div className="card-inner rounded-3 p-3">
+//               <h4>Total Activists</h4>
+//               <span>{summary.total_activists}</span>
+//             </div>
+//           </div>
+//           <div className="cards">
+//             <div className="card-inner rounded-3 p-3">
+//               <h4>Total Members</h4>
+//               <span>{summary.total_members}</span>
+//             </div>
+//           </div>
+//           <div className="cards">
+//             <div className="card-inner rounded-3 p-3">
+//               <h4>Collections This Month</h4>
+//               <span>{summary.collections_this_month}</span>
+//             </div>
+//           </div>
+//           <div className="cards">
+//             <div className="card-inner rounded-3 p-3">
+//               <h4>Collections This Year</h4>
+//               <span>{summary.collections_this_year}</span>
+//             </div>
+//           </div>
+//           <div className="cards">
+//             <div className="card-inner rounded-3 p-3">
+//               <h4>New Daily Reports</h4>
+//               <span>{summary.new_daily_reports}</span>
+//             </div>
+//           </div>
+//           <div className="cards">
+//             <div className="card-inner rounded-3 p-3">
+//               <h4>New Members Ratio (%)</h4>
+//               <span>{summary.new_members_ratio}</span>
+//             </div>
+//           </div>
+//         </div>
 
-        <div className="charts row mt-4">
-          {/* -------- Membership Growth Line Chart -------- */}
-          <div className="col-md-6 mb-4">
-            <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
-              <div className="d-flex align-items-center justify-content-between chart-controls">
-                <h5>Membership Growth</h5>
-                <div className="tabs d-flex">
-                  <button
-                    className={`tab ${
-                      timeFrame === "annually" ? "active" : ""
-                    }`}
-                    onClick={() => setTimeFrame("annually")}
-                  >
-                    Annually
-                  </button>
-                  <button
-                    className={`tab ${timeFrame === "monthly" ? "active" : ""}`}
-                    onClick={() => setTimeFrame("monthly")}
-                  >
-                    Monthly
-                  </button>
-                </div>
-              </div>
-              <Line
-                data={getMembershipChartData(timeFrame)}
-                options={membershipOptions}
-                plugins={[verticalLinePlugin]}
-              />
-            </div>
-          </div>
+//         <div className="charts row mt-4">
+//           {/* -------- Membership Growth Line Chart -------- */}
+//           <div className="col-md-6 mb-4">
+//             <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+//               <div className="d-flex align-items-center justify-content-between chart-controls">
+//                 <h5>Membership Growth</h5>
+//                 <div className="tabs d-flex">
+//                   <button
+//                     className={`tab ${
+//                       timeFrame === "annually" ? "active" : ""
+//                     }`}
+//                     onClick={() => setTimeFrame("annually")}
+//                   >
+//                     Annually
+//                   </button>
+//                   <button
+//                     className={`tab ${timeFrame === "monthly" ? "active" : ""}`}
+//                     onClick={() => setTimeFrame("monthly")}
+//                   >
+//                     Monthly
+//                   </button>
+//                 </div>
+//               </div>
+//               <Line
+//                 data={getMembershipChartData(timeFrame)}
+//                 options={membershipOptions}
+//                 plugins={[verticalLinePlugin]}
+//               />
+//             </div>
+//           </div>
 
-          {/* -------- Collection Trends Bar Chart -------- */}
-          <div className="col-md-6 mb-4">
-            <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
-              <div className="d-flex align-items-center flex-wrap justify-content-between chart-controls">
-                <h5>Collection Trends</h5>
-                <NestedSelect
-                  regions={regionsData}
-                  onSelect={handleRegionChange}
-                />
-                <div className="tabs tabs1 d-flex">
-                  <button
-                    className={`tab ${view === "monthly" ? "active" : ""}`}
-                    onClick={() => setView("monthly")}
-                  >
-                    Monthly
-                  </button>
-                  <button
-                    className={`tab ${view === "annually" ? "active" : ""}`}
-                    onClick={() => setView("annually")}
-                  >
-                    Annually
-                  </button>
-                </div>
-              </div>
-              <Bar
-                data={getCollectionChartData(view, selectedRegion)}
-                options={{
-                  responsive: true,
-                  scales: { y: { beginAtZero: true } },
-                  borderRadius: 6,
-                }}
-              />
-            </div>
-          </div>
+//           {/* -------- Collection Trends Bar Chart -------- */}
+//           <div className="col-md-6 mb-4">
+//             <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+//               <div className="d-flex align-items-center flex-wrap justify-content-between chart-controls">
+//                 <h5>Collection Trends</h5>
+//                 <NestedSelect
+//                   regions={regionsData}
+//                   onSelect={handleRegionChange}
+//                 />
+//                 <div className="tabs tabs1 d-flex">
+//                   <button
+//                     className={`tab ${view === "monthly" ? "active" : ""}`}
+//                     onClick={() => setView("monthly")}
+//                   >
+//                     Monthly
+//                   </button>
+//                   <button
+//                     className={`tab ${view === "annually" ? "active" : ""}`}
+//                     onClick={() => setView("annually")}
+//                   >
+//                     Annually
+//                   </button>
+//                 </div>
+//               </div>
+//               <Bar
+//                 data={getCollectionChartData(view, selectedRegion)}
+//                 options={{
+//                   responsive: true,
+//                   scales: { y: { beginAtZero: true } },
+//                   borderRadius: 6,
+//                 }}
+//               />
+//             </div>
+//           </div>
 
-          {/* -------- Top Performers Doughnut Chart -------- */}
-          <div className="col-md-6 mb-4">
-            <div
-              className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4"
-              style={{ height: "380px" }}
-            >
-              <h5>Top Performers</h5>
-              <Doughnut
-                data={getTopPerformersChartData()}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  cutout: "65%",
-                  radius: "90%",
-                  plugins: {
-                    legend: {
-                      position: "right",
-                      labels: {
-                        usePointStyle: true,
-                        pointStyle: "circle",
-                        font: { size: 14 },
-                      },
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
+//           {/* -------- Top Performers Doughnut Chart -------- */}
+//           <div className="col-md-6 mb-4">
+//             <div
+//               className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4"
+//               style={{ height: "380px" }}
+//             >
+//               <h5>Top Performers</h5>
+//               <Doughnut
+//                 data={getTopPerformersChartData()}
+//                 options={{
+//                   responsive: true,
+//                   maintainAspectRatio: false,
+//                   cutout: "65%",
+//                   radius: "90%",
+//                   plugins: {
+//                     legend: {
+//                       position: "right",
+//                       labels: {
+//                         usePointStyle: true,
+//                         pointStyle: "circle",
+//                         font: { size: 14 },
+//                       },
+//                     },
+//                   },
+//                 }}
+//               />
+//             </div>
+//           </div>
 
-          {/* -------- New vs Old Members Stacked Bar Chart -------- */}
-          <div className="col-md-6 mb-4">
-            <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
-              <div className="d-flex align-items-center flex-wrap justify-content-between chart-controls">
-                <h5>New vs Old Members</h5>
-                <SimpleDropdown
-                  options={regionss}
-                  selected={region1}
-                  onChange={setRegion1}
-                />
-                <div className="tabs d-flex tabs1">
-                  <button
-                    className={`tab ${
-                      timeFrame2 === "annually" ? "active" : ""
-                    }`}
-                    onClick={() => setTimeFrame2("annually")}
-                  >
-                    Annually
-                  </button>
-                  <button
-                    className={`tab ${
-                      timeFrame2 === "monthly" ? "active" : ""
-                    }`}
-                    onClick={() => setTimeFrame2("monthly")}
-                  >
-                    Monthly
-                  </button>
-                </div>
-              </div>
-              <Bar
-                data={getNewVsOldChartData(timeFrame2)}
-                options={{
-                  responsive: true,
-                  scales: {
-                    x: { stacked: true },
-                    y: { stacked: true, beginAtZero: true },
-                  },
-                  elements: { bar: { borderRadius: 6 } },
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
+//           {/* -------- New vs Old Members Stacked Bar Chart -------- */}
+//           <div className="col-md-6 mb-4">
+//             <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+//               <div className="d-flex align-items-center flex-wrap justify-content-between chart-controls">
+//                 <h5>New vs Old Members</h5>
+//                 <SimpleDropdown
+//                   options={regionss}
+//                   selected={region1}
+//                   onChange={setRegion1}
+//                 />
+//                 <div className="tabs d-flex tabs1">
+//                   <button
+//                     className={`tab ${
+//                       timeFrame2 === "annually" ? "active" : ""
+//                     }`}
+//                     onClick={() => setTimeFrame2("annually")}
+//                   >
+//                     Annually
+//                   </button>
+//                   <button
+//                     className={`tab ${
+//                       timeFrame2 === "monthly" ? "active" : ""
+//                     }`}
+//                     onClick={() => setTimeFrame2("monthly")}
+//                   >
+//                     Monthly
+//                   </button>
+//                 </div>
+//               </div>
+//               <Bar
+//                 data={getNewVsOldChartData(timeFrame2)}
+//                 options={{
+//                   responsive: true,
+//                   scales: {
+//                     x: { stacked: true },
+//                     y: { stacked: true, beginAtZero: true },
+//                   },
+//                   elements: { bar: { borderRadius: 6 } },
+//                 }}
+//               />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </main>
+//   );
 }
 
 export default Home;

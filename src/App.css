@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-body{
+body {
   min-width: none;
   min-height: none;
   place-items: none;
@@ -107,6 +107,7 @@ body{
 .container-body {
   background-color: #ffffff;
   border: 1px solid #d5d7da;
+  border-radius: 10px;
 }
 
 .main-title h3 {
@@ -443,17 +444,17 @@ input[type="radio"] {
   font-size: 1rem;
 }
 
-.language{
+.language {
   margin-bottom: 40px;
 }
 
-.language div span{
+.language div span {
   color: #535862;
 }
 
 .language-switch {
   font-size: 0.9rem;
-  border: 2px solid #D5D7DA;
+  border: 2px solid #d5d7da;
   padding: 3px 8px;
 }
 
@@ -464,16 +465,16 @@ input[type="radio"] {
   cursor: pointer;
   font-size: 13px;
   color: #535862;
- background-color: #fff;
- font-weight: 600;
+  background-color: #fff;
+  font-weight: 600;
 }
 
 .lang-btn.active {
   background: #e32124;
   color: #fff;
-} 
+}
 
-.eng-btn{
+.eng-btn {
   padding-left: 3px;
 }
 
@@ -497,21 +498,103 @@ input[type="radio"] {
 .login-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center; 
-  min-height: 100vh; 
-  /* background: #f9fafc;
-  margin: 0 auto;
-  max-width: 500px; 
-  width: 100%; */
+  justify-content: center;
+  min-height: 100vh;
 }
 
-/* Responsive */
-/* @media (max-width: 480px) {
-      .login-container {
-        padding: 1.5rem;
-        max-width: 90%;
-      }
-    } */
+/* Activist Management */
+.select-region {
+  width: 200px;
+}
+
+.select-date {
+  width: 350px;
+}
+
+.select-date input {
+  width: 165px;
+}
+
+.apply-btn {
+  width: 250px;
+  padding: 6px 12px;
+}
+
+.next-btn {
+  background-color: #e32124;
+  color: #fff;
+}
+
+.previous {
+  border: 1px solid #d5d7da;
+}
+
+.activist-table th,
+.activist-table td {
+  padding: 1rem;
+}
+
+.scroll-container {
+  overflow-x: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.table-wrapper {
+  border: 1px solid #d5d7da;
+}
+
+.download-btn,
+.add-activist-btn,
+.apply-btn {
+  background-color: #fff;
+  border: 1px solid #e32124;
+  color: #e32124;
+}
+
+.add-activist-btn {
+  color: #fff;
+  background-color: #e32124;
+}
+
+.download-btn:hover {
+  border: 1px solid #e32124;
+}
+
+.add-activist-save-btn:hover,
+.apply-btn:hover,
+.add-activist-btn:hover {
+  background-color: #d62828;
+  border: 1px solid #e32124;
+}
+
+.add-activist-save-btn {
+  background-color: #e32124;
+  color: #fff;
+}
+
+.add-activist-save-btn,
+.add-activist-cancel-btn {
+  width: 100px;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #fff;
+  color: #535862;
+}
+.btn-outline-secondary:focus {
+  background-color: #fff !important;
+  color: #535862 !important;
+}
+@media screen and  (max-width:1024){
+  .select-date{
+    width: 300px;
+  }
+}
 
 /* Medium <= 992px */
 @media screen and (max-width: 992px) {
@@ -570,13 +653,20 @@ input[type="radio"] {
   }
 
   .header-left {
-    width: 70%;
+    width: 50%;
   }
   .chart-controls {
     justify-content: space-between;
   }
   .notification {
     color: #e32124;
+  }
+  .activist-navbar {
+    /* flex-direction: column; */
+    align-items: flex-start;
+  }
+  .activist-action-buttons{
+    display: none !important;
   }
 }
 
@@ -650,9 +740,61 @@ input[type="radio"] {
     left: 16px;
     min-width: 200px;
   }
+  /* Activist Management */
+  .activist-navbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .activist-navbar > * {
+    width: 100% !important;
+  }
+
+  .select-date {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .select-date input {
+    flex: 1;
+    flex-shrink: 1;
+  }
+
+  .apply-btn {
+    width: 100%;
+  }
+
+  .activist-action-buttons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: flex;
+
+    padding: 0.75rem 1rem;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .activist-action-buttons button {
+    flex: 1;
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+   .activist-action-buttons{
+    display: flex !important;
+  }
 }
 @media screen and (max-width: 391px) {
   .receipt-announcement-div li a {
+    font-size: 14px;
+  }
+  .select-date input {
+    width: 100px;
+  }
+  .header-title h2 {
     font-size: 14px;
   }
 }

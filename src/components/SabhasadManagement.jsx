@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import dashboardData from "../../public/dashboardData.json"; // Import JSON
 
-function ActivistManagement() {
+function SabhasadManagement() {
   const navigate = useNavigate();
   const [activists, setActivists] = useState([]);
   
@@ -16,7 +16,7 @@ function ActivistManagement() {
     <div className="main-container p-3">
       <div className="container-body">
         <div className="d-flex justify-content-between align-items-center mb-3 px-3 pt-3 activist-header">
-          <h4 className="">Activists Management</h4>
+          <h4 className="">Sabhasad Management</h4>
 
           <div className="d-flex gap-2 activist-action-buttons">
             <button className="download-btn">
@@ -24,9 +24,9 @@ function ActivistManagement() {
             </button>
             <button
               className="add-activist-btn"
-              onClick={() => navigate("/activists/add")}
+              onClick={() => navigate("/sabhasad/add")}
             >
-               Add Activist <i className="fa-solid fa-plus me-1"></i>
+               Add Sabhasad <i className="fa-solid fa-plus me-1"></i>
             </button>
           </div>
         </div>
@@ -46,8 +46,8 @@ function ActivistManagement() {
           </div>
 
           {/* Region Select */}
-          <select className="form-select select-region flex-lg-grow-0">
-            <option>Select Regions</option>
+          <select className="form-select select-region flex-lg-grow-0" name="donor-type">
+            <option>Select Donor Type</option>
             <option>Mumbai</option>
             <option>Pune</option>
             <option>Nasik</option>
@@ -55,13 +55,13 @@ function ActivistManagement() {
 
           {/* Date Range */}
           <div className="d-flex align-items-center gap-1 select-date flex-lg-grow-0">
-            <input type="date" className="form-control" />
+            <input type="date" name="date" className="form-control" />
             <span>-</span>
-            <input type="date" className="form-control" />
+            <input type="date" name="date" className="form-control" />
           </div>
 
           {/* Apply Button */}
-          <button className="apply-btn flex-lg-grow-0">Apply</button>
+          <button className="apply-btn flex-lg-grow-0 flex-md-grow-1">Apply</button>
         </div>
 
         {/* Table */}
@@ -144,7 +144,7 @@ function ActivistManagement() {
   );
 }
 
-export default ActivistManagement;
+export default SabhasadManagement;
 
 // {
 //   activists.map((activist) => (
