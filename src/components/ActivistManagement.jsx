@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from "react";
+//import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-import dashboardData from "../../public/dashboardData.json"; // Import JSON
+//import dashboardData from "../../public/dashboardData.json"; // Import JSON
 
-function ActivistManagement() {
-  const [activists, setActivists] = useState([]);
+function ActivistManagement({ activists }) {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    setActivists(dashboardData.ActivistManagement || []);
-  }, []);
+  // useEffect(() => {
+  //   setActivists(dashboardData.ActivistManagement || []);
+  // }, []);
 
   return (
     <div className="main-container p-3">
       <div className="container-body">
-        <div className="d-flex justify-content-between align-items-center mb-3 px-3 pt-3 Activist-header">
+        <div className="d-flex justify-content-between align-items-center mb-3 px-3 pt-3 activist-header">
           <h4 className="">Activists Management</h4>
 
           <div className="d-flex gap-2 activist-action-buttons">
             <button className="download-btn">
               <i className="fa-solid fa-download me-1"></i> Download
             </button>
-            <button className="add-activist-btn">
+            <button
+              className="add-activist-btn"
+              onClick={() => navigate("/activists/add")}
+            >
               <i className="fa-solid fa-plus me-1"></i> Add Activist
             </button>
           </div>
@@ -55,9 +59,7 @@ function ActivistManagement() {
           </div>
 
           {/* Apply Button */}
-          <button className="apply-btn flex-lg-grow-0">
-            Apply
-          </button>
+          <button className="apply-btn flex-lg-grow-0">Apply</button>
         </div>
 
         {/* Table */}
@@ -77,35 +79,29 @@ function ActivistManagement() {
                   <th>Role</th>
                   <th>Region</th>
                   <th>Mobile</th>
-                  <th>Status</th>
-                  <th className="text-center">Actions</th>
+                  {/* <th>Status</th> */}
+                  <th className="text-center"></th>
                 </tr>
               </thead>
               <tbody>
-                {activists.map((activist) => (
-                  <tr key={activist.id}>
-                    <td>{activist.name}</td>
-                    <td>{activist.role}</td>
-                    <td>{activist.region}</td>
-                    <td>{activist.mobile}</td>
-                    <td>
-                      <span
-                        className={`badge rounded-pill ${
-                          activist.status === "Active"
-                            ? "bg-success-subtle text-success"
-                            : "bg-danger-subtle text-danger"
-                        }`}
-                      >
-                        {activist.status}
-                      </span>
-                    </td>
-                    <td className="text-center">
-                      <i className="fa-regular fa-pen-to-square mx-2"></i>
-                      <i className="fa-regular fa-trash-can mx-2"></i>
-                      <i className="fa-regular fa-eye mx-2"></i>
-                    </td>
-                  </tr>
-                ))}
+                {activists.length > 0 ? (
+                  activists.map((activist, index) => (
+                    <tr key={index}>
+                      <td>{activist.name}</td>
+                      <td>{activist.role}</td>
+                      <td>{activist.region}</td>
+                      <td>{activist.mobile}</td>
+
+                      <td className="text-center">
+                        <i className="fa-regular fa-pen-to-square mx-2"></i>
+                        <i className="fa-regular fa-trash-can mx-2"></i>
+                        <i className="fa-regular fa-eye mx-2"></i>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <p>No activists found.</p>
+                )}
               </tbody>
             </table>
           </div>
@@ -147,3 +143,30 @@ function ActivistManagement() {
 }
 
 export default ActivistManagement;
+
+// {
+//   activists.map((activist) => (
+//     <tr key={activist.id}>
+//       <td>{activist.name}</td>
+//       <td>{activist.role}</td>
+//       <td>{activist.region}</td>
+//       <td>{activist.mobile}</td>
+//       <td>
+//         <span
+//           className={`badge rounded-pill ${
+//             activist.status === "Active"
+//               ? "bg-success-subtle text-success"
+//               : "bg-danger-subtle text-danger"
+//           }`}
+//         >
+//           {activist.status}
+//         </span>
+//       </td>
+//       <td className="text-center">
+//         <i className="fa-regular fa-pen-to-square mx-2"></i>
+//         <i className="fa-regular fa-trash-can mx-2"></i>
+//         <i className="fa-regular fa-eye mx-2"></i>
+//       </td>
+//     </tr>
+//   ));
+// }

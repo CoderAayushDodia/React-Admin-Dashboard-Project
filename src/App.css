@@ -508,15 +508,16 @@ input[type="radio"] {
 }
 
 .select-date {
-  width: 400px;
+  width: 350px;
 }
 
 .select-date input {
-  width: 180px;
+  width: 165px;
 }
 
 .apply-btn {
   width: 250px;
+  padding: 6px 12px;
 }
 
 .next-btn {
@@ -631,7 +632,7 @@ input[type="radio"] {
   }
 
   .header-left {
-    width: 70%;
+    width: 50%;
   }
   .chart-controls {
     justify-content: space-between;
@@ -640,7 +641,7 @@ input[type="radio"] {
     color: #e32124;
   }
   .activist-navbar {
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: flex-start;
   }
 }
@@ -747,13 +748,13 @@ input[type="radio"] {
     right: 0;
     background: white;
     display: flex;
-
+    
     padding: 0.75rem 1rem;
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
 
-  .activist-action-buttons .btn {
+  .activist-action-buttons button {
     flex: 1;
     font-size: 1rem;
     padding: 0.75rem;
@@ -765,5 +766,8 @@ input[type="radio"] {
   }
   .select-date input {
     width: 100px;
+  }
+  .header-title h2{
+    font-size: 14px;
   }
 }
