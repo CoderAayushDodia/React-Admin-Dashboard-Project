@@ -38,7 +38,7 @@ function AddActivist({ addNewActivist }) {
           <div className="d-flex gap-2 activist-action-buttons">
             <button
               type="button"
-              className="btn btn-outline-secondary me-2 add-activist-save-btn"
+              className="btn btn-outline-secondary me-2 add-activist-cancel-btn"
               onClick={() => navigate("/activists")}
             >
               Cancel

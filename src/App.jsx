@@ -7,6 +7,8 @@ import Home from "./components/Home";
 import LogIn from "./components/LogIn";
 import ActivistManagement from "./components/ActivistManagement";
 import AddActivist from "./components/AddActivist";
+import SabhasadManagement from "./components/SabhasadManagement";
+import AddSabhasad from "./components/AddSabhasad";
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -108,6 +110,44 @@ function App() {
               menuItems={dashboardData?.sidebarMenu || []}
             />
             <AddActivist addNewActivist={addNewActivist} />
+          </div>
+        }
+      />
+      <Route
+        path="/sabhasad"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <SabhasadManagement activists={activists}/>
+          </div>
+        }
+      />
+
+      {/* Add Activist */}
+      <Route
+        path="/sabhasad/add"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <AddSabhasad addNewActivist={addNewActivist} />
           </div>
         }
       />

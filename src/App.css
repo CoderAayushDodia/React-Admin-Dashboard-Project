@@ -561,28 +561,39 @@ input[type="radio"] {
   background-color: #e32124;
 }
 
+.download-btn:hover {
+  border: 1px solid #e32124;
+}
+
+.add-activist-save-btn:hover,
+.apply-btn:hover,
 .add-activist-btn:hover {
   background-color: #d62828;
   border: 1px solid #e32124;
 }
 
-.download-btn:hover {
-  border: 1px solid #e32124;
-}
-
-.apply-btn:hover {
+.add-activist-save-btn {
   background-color: #e32124;
-  border: 1px solid #e32124;
   color: #fff;
 }
 
-.add-activist-save-btn, .add-activist-cancel-btn {
+.add-activist-save-btn,
+.add-activist-cancel-btn {
   width: 100px;
 }
 
-.add-activist-save-btn{
-  background-color: #e32124;
-  color: #fff;
+.btn-outline-secondary:hover {
+  background-color: #fff;
+  color: #535862;
+}
+.btn-outline-secondary:focus {
+  background-color: #fff !important;
+  color: #535862 !important;
+}
+@media screen and  (max-width:1024){
+  .select-date{
+    width: 300px;
+  }
 }
 
 /* Medium <= 992px */
@@ -653,6 +664,9 @@ input[type="radio"] {
   .activist-navbar {
     /* flex-direction: column; */
     align-items: flex-start;
+  }
+  .activist-action-buttons{
+    display: none !important;
   }
 }
 
@@ -768,6 +782,9 @@ input[type="radio"] {
     flex: 1;
     font-size: 1rem;
     padding: 0.75rem;
+  }
+   .activist-action-buttons{
+    display: flex !important;
   }
 }
 @media screen and (max-width: 391px) {
