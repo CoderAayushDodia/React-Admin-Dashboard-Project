@@ -570,6 +570,7 @@ input[type="radio"] {
 .add-activist-btn:hover {
   background-color: #d62828;
   border: 1px solid #e32124;
+  color: #fff;
 }
 
 .add-activist-save-btn {
@@ -590,9 +591,17 @@ input[type="radio"] {
   background-color: #fff !important;
   color: #535862 !important;
 }
-@media screen and  (max-width:1024){
-  .select-date{
-    width: 300px;
+
+@media(max-width: 1026px) {
+.activist-navbar .select-dates input[type="date"].form-control,
+  .activist-navbar .select-dates .date-input {
+    /* size */
+    width: 100px !important;
+    min-width: 80px !important;
+    max-width: 120px !important;
+    flex: 0 0 100px !important;
+    box-sizing: border-box;
+    padding: 6px 8px !important;
   }
 }
 
@@ -640,6 +649,9 @@ input[type="radio"] {
   .receipt-announcement-div {
     display: flex !important;
   }
+  .select-date input{
+    width: 200px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -665,8 +677,11 @@ input[type="radio"] {
     /* flex-direction: column; */
     align-items: flex-start;
   }
-  .activist-action-buttons{
+  .activist-action-buttons {
     display: none !important;
+  }
+  .apply-btn{
+    width: 180px;
   }
 }
 
@@ -783,7 +798,7 @@ input[type="radio"] {
     font-size: 1rem;
     padding: 0.75rem;
   }
-   .activist-action-buttons{
+  .activist-action-buttons {
     display: flex !important;
   }
 }

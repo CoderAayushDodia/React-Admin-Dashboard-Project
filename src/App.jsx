@@ -9,6 +9,8 @@ import ActivistManagement from "./components/ActivistManagement";
 import AddActivist from "./components/AddActivist";
 import SabhasadManagement from "./components/SabhasadManagement";
 import AddSabhasad from "./components/AddSabhasad";
+import ReceiptsManagement from "./components/RecieptsManagement";
+import AddReciepts from "./components/AddReciepts";
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -48,7 +50,7 @@ function App() {
           </div>
         }
       />
-
+      {/* Home Dashboard */}
       <Route
         path="/dashboard"
         element={
@@ -75,6 +77,7 @@ function App() {
           </div>
         }
       />
+      {/* Activist Management */}
       <Route
         path="/activists"
         element={
@@ -113,6 +116,8 @@ function App() {
           </div>
         }
       />
+
+      {/* Sabhasad Management */}
       <Route
         path="/sabhasad"
         element={
@@ -132,7 +137,7 @@ function App() {
         }
       />
 
-      {/* Add Activist */}
+      {/* Add Sabhasad */}
       <Route
         path="/sabhasad/add"
         element={
@@ -148,6 +153,45 @@ function App() {
               menuItems={dashboardData?.sidebarMenu || []}
             />
             <AddSabhasad addNewActivist={addNewActivist} />
+          </div>
+        }
+      />
+      {/* Receipts Management */}
+      <Route
+        path="/receipts"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <ReceiptsManagement activists={activists}/>
+          </div>
+        }
+      />
+
+      {/* Add Reciepta */}
+      <Route
+        path="/receipts/add"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <AddReciepts addNewActivist={addNewActivist} />
           </div>
         }
       />
