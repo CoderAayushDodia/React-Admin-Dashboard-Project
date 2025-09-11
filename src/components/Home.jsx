@@ -1547,28 +1547,32 @@ function Home() {
 
     let data = labels.map((k) => Number(source[k] ?? 0));
 
-      if (labels.length === 1) {
-    labels = ["Start", labels[0]]; // second empty label
-    data = [0, data[0]]; // duplicate same value
-  }
+    if (labels.length === 1) {
+      labels = [0, labels[0]]; // second empty label
+      data = [0, data[0]]; // duplicate same value
+    }
     return {
       labels: labels.length > 0 ? labels : ["No Data"],
       datasets: [
         {
           label: "Members",
           data,
-          borderColor: "rgba(75,192,192,1)",
+          borderColor: "red",
           backgroundColor: "rgba(75,192,192,0.2)",
           fill: false,
           tension: 0.4,
-          pointRadius: 4, // 👈 show points
+          pointRadius: 0, // 👈 show points
           pointBackgroundColor: "rgba(75,192,192,1)",
+          pointHoverRadius: 5,
         },
       ],
     };
   };
 
-  console.log("Membership Growth Chart Data:", getMembershipChartData(timeFrame));
+  console.log(
+    "Membership Growth Chart Data:",
+    getMembershipChartData(timeFrame)
+  );
 
   // ---------------- Collection trends (aggregate nested totals by district or show selected region) ---------------
   const getCollectionChartData = (timeFrameArg, selectedRegionNode) => {
@@ -1627,6 +1631,14 @@ function Home() {
       datasets: [
         {
           data,
+          backgroundColor: [
+            "#e60000",
+            "#ff3333",
+            "#ff4d4d",
+            "#ff6666",
+            "#ff9999",
+            "#ffcccc",
+          ],
           borderWidth: 1,
         },
       ],
@@ -1634,27 +1646,48 @@ function Home() {
   };
 
   // ------------- New vs Old: recursively find 'new'/'old' sums for each month/year -------------
-  const accumulateNewOld = (node) => {
-    // returns { new: N, old: M } by recursively walking node until it finds keys 'new' & 'old'
-    let sums = { new: 0, old: 0 };
-    if (node == null) return sums;
-    if (typeof node === "object") {
-      if (node?.new !== undefined || node?.old !== undefined) {
-        sums.new += Number(node.new ?? 0);
-        sums.old += Number(node.old ?? 0);
-        return sums;
-      }
-      for (const k of Object.keys(node)) {
-        const child = accumulateNewOld(node[k]);
-        sums.new += child.new;
-        sums.old += child.old;
-      }
+  // const accumulateNewOld = (node) => {
+  //   // returns { new: N, old: M } by recursively walking node until it finds keys 'new' & 'old'
+  //   let sums = { new: 0, old: 0 };
+  //   if (node == null) return sums;
+  //   if (typeof node === "object") {
+  //     if (node?.new !== undefined || node?.old !== undefined) {
+  //       sums.new += Number(node.new ?? 0);
+  //       sums.old += Number(node.old ?? 0);
+  //       return sums;
+  //     }
+  //     for (const k of Object.keys(node)) {
+  //       const child = accumulateNewOld(node[k]);
+  //       sums.new += child.new;
+  //       sums.old += child.old;
+  //     }
+  //   }
+  //   return sums;
+  // };
+
+  const accumulateNewOld = (obj) => {
+  let sumNew = 0;
+  let sumOld = 0;
+
+  if (!obj || typeof obj !== "object") return { new: 0, old: 0 };
+
+  for (const key of Object.keys(obj)) {
+    if (key === "total" && typeof obj[key] === "object") {
+      sumNew += obj[key].new || 0;
+      sumOld += obj[key].old || 0;
+    } else if (typeof obj[key] === "object") {
+      const nested = accumulateNewOld(obj[key]);
+      sumNew += nested.new;
+      sumOld += nested.old;
     }
-    return sums;
-  };
+  }
+
+  return { new: sumNew, old: sumOld };
+};
 
   const getNewVsOldChartData = (frame) => {
-    const frameObj = new_vs_old?.[frame] || {};
+    const key = frame === "annually" ? "yearly" : frame;
+    const frameObj = new_vs_old?.[key] || {};
     const labels = Object.keys(frameObj).map((k) =>
       k === "null" ? "Unknown" : k
     );
@@ -1668,11 +1701,71 @@ function Home() {
     return {
       labels,
       datasets: [
-        { label: "New Members", data: newData },
-        { label: "Old Members", data: oldData },
+        { label: "New Members", data: newData,  backgroundColor: "red", },
+        { label: "Old Members", data: oldData, backgroundColor: "lightgrey", },
       ],
     };
   };
+
+// const getNewVsOldChartData = (frame) => {
+//   const frameObj = new_vs_old?.[frame] || {};
+//   const labels = [];
+//   const newData = [];
+//   const oldData = [];
+
+//   // Helper to accumulate 'new'/'old' totals recursively
+//  const accumulateNewOld = (obj) => {
+//   let sumNew = 0;
+//   let sumOld = 0;
+
+//   if (!obj || typeof obj !== "object") return { new: 0, old: 0 };
+
+//   for (const key of Object.keys(obj)) {
+//     if (key === "total" && typeof obj[key] === "object") {
+//       sumNew += obj[key].new || 0;
+//       sumOld += obj[key].old || 0;
+//     } else if (typeof obj[key] === "object") {
+//       const nested = accumulateNewOld(obj[key]);
+//       sumNew += nested.new;
+//       sumOld += nested.old;
+//     }
+//   }
+
+//   return { new: sumNew, old: sumOld };
+// };
+
+
+//   // Iterate top-level keys (months or years)
+//   for (const topKey of Object.keys(frameObj)) {
+//     const topNode = frameObj[topKey];
+
+//     let filteredNode = topNode;
+
+//     // If region1 is selected, drill into that region
+//     if (region1) {
+//       for (const districtKey of Object.keys(topNode)) {
+//         if (districtKey === region1) {
+//           filteredNode = topNode[districtKey];
+//           break;
+//         }
+//       }
+//     }
+
+//     const sums = accumulateNewOld(filteredNode);
+//     labels.push(topKey);
+//     newData.push(sums.new);
+//     oldData.push(sums.old);
+//   }
+
+//   return {
+//     labels,
+//     datasets: [
+//       { label: "New Members", data: newData, backgroundColor: "red" },
+//       { label: "Old Members", data: oldData, backgroundColor: "lightgrey" },
+//     ],
+//   };
+// };
+
 
   // ---------------- Build region nodes for NestedSelect from collection_trends.monthly (generic recursive builder) ---------------
 
