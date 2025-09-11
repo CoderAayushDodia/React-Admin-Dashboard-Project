@@ -11,6 +11,8 @@ import SabhasadManagement from "./components/SabhasadManagement";
 import AddSabhasad from "./components/AddSabhasad";
 import ReceiptsManagement from "./components/RecieptsManagement";
 import AddReciepts from "./components/AddReciepts";
+import Announcements from "./components/Announcements";
+import AddAnnouncements from "./components/AddAnnouncements";
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -192,6 +194,45 @@ function App() {
               menuItems={dashboardData?.sidebarMenu || []}
             />
             <AddReciepts addNewActivist={addNewActivist} />
+          </div>
+        }
+      />
+      {/* Announcements */}
+      <Route
+        path="/announcements"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <Announcements activists={activists}/>
+          </div>
+        }
+      />
+
+      {/* Add Announcements */}
+      <Route
+        path="/announcements/add"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <AddAnnouncements addNewActivist={addNewActivist} />
           </div>
         }
       />

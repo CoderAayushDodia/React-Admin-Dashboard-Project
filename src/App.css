@@ -678,7 +678,7 @@ input[type="radio"] {
     align-items: flex-start;
   }
   .activist-action-buttons {
-    display: none !important;
+    display: flex !important;
   }
   .apply-btn{
     width: 180px;
