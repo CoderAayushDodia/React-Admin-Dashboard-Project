@@ -6,7 +6,6 @@
 // function ActivistManagement() {
 //   const navigate = useNavigate();
 //   const [activists, setActivists] = useState([]);
-  
 
 //   useEffect(() => {
 //     setActivists(dashboardData.ActivistManagement || []);
@@ -20,7 +19,7 @@
 
 //           <div className="d-flex gap-2 activist-action-buttons">
 //             <button className="download-btn">
-//              Download <i className="fa-solid fa-download me-1"></i> 
+//              Download <i className="fa-solid fa-download me-1"></i>
 //             </button>
 //             <button
 //               className="add-activist-btn"
@@ -227,7 +226,6 @@ function ActivistManagement() {
   // ✅ Fetch on mount
   useEffect(() => {
     fetchActivists();
-   
   }, []);
 
   // ✅ Re-fetch if navigated back with updatedAt flag (after adding activist)
@@ -248,13 +246,13 @@ function ActivistManagement() {
 
           <div className="d-flex gap-2 activist-action-buttons">
             <button className="download-btn">
-              Download <i className="fa-solid fa-download me-1"></i>
+              Download <i className="fa-solid fa-download me-1 me-sm-0"></i>
             </button>
             <button
               className="add-activist-btn"
               onClick={() => navigate("/activists/add")}
             >
-              Add Activist <i className="fa-solid fa-plus me-1"></i>
+              Add Activist <i className="fa-solid fa-plus me-1 me-sm-0"></i>
             </button>
           </div>
         </div>
@@ -318,11 +316,38 @@ function ActivistManagement() {
           </div>
         </div>
 
-        {/* Keep pagination component here if you have one */}
+        {/* Pagination */}
+        <div className="d-lg-flex d-md-flex justify-content-between align-items-center mt-3 px-3 pb-3 d-none">
+          <button className="btn previous rounded-3">
+            <i className="fa-solid fa-arrow-left"></i> Previous
+          </button>
+          <div>
+            <button className="btn  mx-1 next-btn rounded-3">1</button>
+            <button className="btn  mx-1">2</button>
+            <button className="btn  mx-1">3</button>
+            <span className="mx-2">...</span>
+            <button className="btn m-1">8</button>
+            <button className="btn m-1">9</button>
+            <button className="btn m-1">10</button>
+          </div>
+          <button className="btn next-btn rounded-3">
+            Next <i className="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <div className="d-sm-flex d-md-none d-none justify-content-between align-items-center mt-3 px-3 pb-3">
+          <button className="btn previous rounded-3 p-2">
+            <i className="fa-solid fa-arrow-left"></i>
+          </button>
+          <div>
+            <span>Page 1 to 10</span>
+          </div>
+          <button className="btn next-btn rounded-3 p-2">
+            <i className="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
 export default ActivistManagement;
-
