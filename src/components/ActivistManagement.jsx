@@ -227,7 +227,7 @@ function ActivistManagement() {
   // ✅ Fetch on mount
   useEffect(() => {
     fetchActivists();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, []);
 
   // ✅ Re-fetch if navigated back with updatedAt flag (after adding activist)
