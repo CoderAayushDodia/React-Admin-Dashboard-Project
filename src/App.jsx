@@ -13,6 +13,8 @@ import ReceiptsManagement from "./components/RecieptsManagement";
 import AddReciepts from "./components/AddReciepts";
 import Announcements from "./components/Announcements";
 import AddAnnouncements from "./components/AddAnnouncements";
+import AddReport from "./components/AddReport";
+import ReportManagement from "./components/ReportManagement";
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -233,6 +235,46 @@ function App() {
               menuItems={dashboardData?.sidebarMenu || []}
             />
             <AddAnnouncements addNewActivist={addNewActivist} />
+          </div>
+        }
+      />
+
+      {/* Report Management */}
+      <Route
+        path="/reports"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <ReportManagement activists={activists}/>
+          </div>
+        }
+      />
+
+      {/* Add Reports */}
+      <Route
+        path="/reports/add"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <AddReport addNewActivist={addNewActivist} />
           </div>
         }
       />
