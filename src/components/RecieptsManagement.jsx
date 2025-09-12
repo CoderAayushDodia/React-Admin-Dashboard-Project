@@ -34,13 +34,13 @@ function ReceiptsManagement() {
         {/* Filters */}
         <div className="d-flex flex-lg-nowrap flex-wrap gap-3 mb-3 px-3 py-2 activist-navbar w-100">
           {/* Search */}
-          <div className="header-left rounded d-flex align-items-center position-relative flex-grow-1">
+          <div className="header-left rounded d-flex align-items-center position-relative">
             <span>
               <i className="fa-solid fa-magnifying-glass"></i>
             </span>
             <input
               placeholder="Search"
-              className="border-0 shadow-none form-control flex-grow-1"
+              className="border-0 shadow-none form-control flex-grow-0"
               type="text"
             />
           </div>
@@ -62,14 +62,15 @@ function ReceiptsManagement() {
           </select>
 
           {/* Date Range */}
-          <div className="d-flex align-items-center gap-1 select-dates flex-lg-grow-0">
+          <div className="d-flex align-items-center gap-1 select-date flex-lg-grow-0 flex-sm-grow-1">
             <input type="date" className="form-control" />
             <span>-</span>
             <input type="date" className="form-control" />
           </div>
 
           {/* Apply Button */}
-          <button className="apply-btn-reciepts flex-lg-grow-0">Apply</button>
+          {/* <button className="apply-btn-reciepts flex-lg-grow-0">Apply</button> */}
+          <button className="apply-btn flex-lg-grow-2 flex-md-grow-1">Apply</button>
         </div>
 
         {/* Table */}
