@@ -15,6 +15,7 @@ import Announcements from "./components/Announcements";
 import AddAnnouncements from "./components/AddAnnouncements";
 import AddReport from "./components/AddReport";
 import ReportManagement from "./components/ReportManagement";
+import Notification from "./components/Notification";
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -275,6 +276,24 @@ function App() {
               menuItems={dashboardData?.sidebarMenu || []}
             />
             <AddReport addNewActivist={addNewActivist} />
+          </div>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <div className="grid-container position-relative">
+            <Header
+              OpenSidebar={OpenSidebar}
+              regions={dashboardData?.regions || []}
+              notifications={dashboardData?.notifications || []}
+            />
+            <Sidebar
+              openSidebarToggle={openSidebarToggle}
+              OpenSidebar={OpenSidebar}
+              menuItems={dashboardData?.sidebarMenu || []}
+            />
+            <Notification />
           </div>
         }
       />
