@@ -39,7 +39,7 @@ function AddReciepts({ addNewActivist }) {
             <button
               type="button"
               className="btn btn-outline-secondary me-2 add-activist-cancel-btn"
-              onClick={() => navigate("/sabhasad")}
+              onClick={() => navigate("/receipts")}
             >
               Cancel
             </button>
