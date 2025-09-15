@@ -211,8 +211,8 @@ function AddActivist() {
     // local_governance: 0,
     // village: 0,
     password: "",
-    // email: "",
-    // age: "",
+    email: "",
+    age: "",
   });
 
   const API2 = "https://shramjivi-backend.onrender.com/api/auth/users/";
@@ -277,6 +277,8 @@ function AddActivist() {
         district: formData.district,
         taluka: formData.taluka,
       },
+      email: formData.email,
+      age: formData.age,
     };
 
     const response = await fetch(API2, {
@@ -371,6 +373,7 @@ function AddActivist() {
           <div className="row g-3">
             {/* Name */}
             <div className="col-md-4">
+              <h4 className="d-lg-none d-md-none d-block">Add Activist</h4>
               <label className="form-label">
                 Name <span className="text-danger fw-bold">*</span>
               </label>
@@ -431,6 +434,36 @@ function AddActivist() {
                 name="phone"
                 className="form-control"
                 value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div className="col-md-4">
+              <label className="form-label">
+                Email <span className="text-danger fw-bold">*</span>
+              </label>
+              <input
+                type="text"
+                name="email"
+                className="form-control"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Phone */}
+            <div className="col-md-4">
+              <label className="form-label">
+                Age <span className="text-danger fw-bold">*</span>
+              </label>
+              <input
+                type="number"
+                name="age"
+                className="form-control"
+                value={formData.age}
                 onChange={handleChange}
                 required
               />
