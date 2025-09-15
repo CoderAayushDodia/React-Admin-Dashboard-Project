@@ -254,17 +254,17 @@ function AddAnnouncements({ addNewActivist }) {
         <div className="add-activist-header d-lg-flex d-md-flex d-none align-items-center gap-2 pt-3 px-3 ">
           <span class="material-symbols-outlined">home</span>
           <i className="fa fa-angle-right"></i>
-          <p className="mb-0">Activists Management</p>
+          <p className="mb-0">Announcements</p>
           <i className="fa fa-angle-right"></i>
-          <p className="mb-0">Add Activist</p>
+          <p className="mb-0">Create Announcements</p>
         </div>
         <div className="d-flex justify-content-between align-items-center mb-2 pt-3 px-3">
-          <h4>Add Activist</h4>
+          <h4>Announcements</h4>
           <div className="d-flex gap-2 activist-action-buttons">
             <button
               type="button"
               className="btn btn-outline-secondary me-2 add-activist-cancel-btn"
-              onClick={() => navigate("/activists")}
+              onClick={() => navigate("/announcements")}
             >
               Cancel
             </button>
@@ -280,12 +280,12 @@ function AddAnnouncements({ addNewActivist }) {
       </div>
 
       <div className="d-flex justify-content-between align-items-center mb-lg-2 mb-md-2 mb-0 pt-lg-3 pt-md-2 pt-0 px-3 d-lg-none d-md-none d-flex">
-          <h4 className="d-lg-block d-md-block d-none">Add Activist</h4>
+          <h4 className="d-lg-block d-md-block d-none">Announcements</h4>
           <div className="d-flex gap-2 activist-action-buttons">
             <button
               type="button"
               className="btn btn-outline-secondary me-2 add-activist-cancel-btn"
-              onClick={() => navigate("/activists")}
+              onClick={() => navigate("/announcements")}
             >
               Cancel
             </button>
