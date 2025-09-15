@@ -216,6 +216,8 @@ function AddActivist() {
   });
 
   const API2 = "https://shramjivi-backend.onrender.com/api/auth/users/";
+  //const API2 = "https://shramjivi-backend.onrender.com/api/activists/";
+
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -225,40 +227,85 @@ function AddActivist() {
   };
 
   // ✅ Submit form data
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setError(null);
+
+  //   try {
+  //     const response = await fetch(API2, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`, // ✅ add this
+  //       },
+  //       credentials: "include",
+  //       body: JSON.stringify(formData),
+  //     });
+
+  //     if (!response.ok) {
+  //       const errData = await response.json().catch(() => null);
+  //       throw new Error(
+  //         errData?.message || `Failed to create activist: ${response.status}`
+  //       );
+  //     }
+
+  //     // ✅ Success → navigate back and trigger re-fetch in ActivistManagement
+  //     navigate("/activists", {
+  //       state: { updatedAt: Date.now() },
+  //     });
+  //   } catch (err) {
+  //     console.error("AddActivist error:", err);
+  //     setError(err.message || "Unknown error");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
 
-    try {
-      const response = await fetch(API2, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // ✅ add this
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+  try {
+    const payload = {
+      name: formData.name,
+      phone: formData.phone,
+      role: formData.role,
+      password: formData.password,
+      region: {
+        district: formData.district,
+        taluka: formData.taluka,
+      },
+    };
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => null);
-        throw new Error(
-          errData?.message || `Failed to create activist: ${response.status}`
-        );
-      }
+    const response = await fetch(API2, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    });
 
-      // ✅ Success → navigate back and trigger re-fetch in ActivistManagement
-      navigate("/activists", {
-        state: { updatedAt: Date.now() },
-      });
-    } catch (err) {
-      console.error("AddActivist error:", err);
-      setError(err.message || "Unknown error");
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      const errData = await response.json().catch(() => null);
+      console.error("Backend error response:", errData);
+      throw new Error(errData?.message || `Failed to create activist: ${response.status}`);
     }
-  };
+
+    navigate("/activists", {
+      state: { updatedAt: Date.now() },
+    });
+  } catch (err) {
+    console.error("AddActivist error:", err);
+    setError(err.message || "Unknown error");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="main-container p-3">
@@ -307,7 +354,7 @@ function AddActivist() {
             Cancel
           </button>
           <button
-            type="submit"
+            // type="submit"
             className="add-activist-save-btn"
             onClick={handleSubmit}
             disabled={loading}
@@ -361,12 +408,13 @@ function AddActivist() {
                 Region <span className="text-danger fw-bold">*</span>
               </label>
               <select
-                name="role"
+                name="district"
                 className="form-select"
-                value={formData.role}
+                value={formData.district}
                 onChange={handleChange}
                 required
               >
+                <option value="Ahmednagar">Ahmednagar</option>
                 <option value="taluka_admin">Nasik</option>
                 <option value="district_admin">Satara</option>
                 <option value="state_admin">Janakpur</option>
@@ -388,42 +436,6 @@ function AddActivist() {
               />
             </div>
 
-            {/* Position */}
-            {/* <div className="col-md-4">
-              <label className="form-label">Position</label>
-              <input
-                type="text"
-                name="position"
-                className="form-control"
-                value={formData.position}
-                onChange={handleChange}
-              />
-            </div> */}
-
-            {/* Email */}
-            {/* <div className="col-md-4">
-              <label className="form-label">Email</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div> */}
-
-            {/* Age */}
-            {/* <div className="col-md-4">
-              <label className="form-label">Age</label>
-              <input
-                type="text"
-                name="age"
-                className="form-control"
-                value={formData.age}
-                onChange={handleChange}
-              />
-            </div> */}
-
             {/* Password */}
             <div className="col-md-4 position-relative">
               <label className="form-label">
@@ -432,6 +444,7 @@ function AddActivist() {
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
+                placeholder="**********"
                 className="form-control"
                 value={formData.password}
                 onChange={handleChange}
@@ -464,3 +477,51 @@ function AddActivist() {
 }
 
 export default AddActivist;
+
+{
+  /* Position */
+}
+{
+  /* <div className="col-md-4">
+              <label className="form-label">Position</label>
+              <input
+                type="text"
+                name="position"
+                className="form-control"
+                value={formData.position}
+                onChange={handleChange}
+              />
+            </div> */
+}
+
+{
+  /* Email */
+}
+{
+  /* <div className="col-md-4">
+              <label className="form-label">Email</label>
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div> */
+}
+
+{
+  /* Age */
+}
+{
+  /* <div className="col-md-4">
+              <label className="form-label">Age</label>
+              <input
+                type="text"
+                name="age"
+                className="form-control"
+                value={formData.age}
+                onChange={handleChange}
+              />
+            </div> */
+}

@@ -285,7 +285,7 @@ function ActivistManagement() {
                     <th className="text-center"></th>
                   </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                   {activists.map((activist) => (
                     <tr key={activist.id ?? activist._id ?? Math.random()}>
                       <td>{activist.name}</td>
@@ -310,6 +310,40 @@ function ActivistManagement() {
                       </td>
                     </tr>
                   ))}
+                </tbody> */}
+                <tbody>
+                  {activists.map((activist) => {
+                    // ✅ Format role: convert snake_case -> Title Case
+                    const formattedRole = activist.role
+                      ? activist.role
+                          .split("_") // split by underscore
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() + word.slice(1)
+                          ) // capitalize each part
+                          .join(" ")
+                      : "-";
+
+                    return (
+                      <tr key={activist.id ?? activist._id ?? Math.random()}>
+                        <td>{activist.name}</td>
+
+                        {/* ✅ Show formatted role */}
+                        <td>{formattedRole}</td>
+
+                        {/* ✅ Show only district */}
+                        <td>{activist.region?.district ?? "-"}</td>
+
+                        <td>{activist.phone ?? activist.mobile ?? "-"}</td>
+
+                        <td className="text-center">
+                          <i className="fa-regular fa-pen-to-square mx-2"></i>
+                          <i className="fa-regular fa-trash-can mx-2"></i>
+                          <i className="fa-regular fa-eye mx-2"></i>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
