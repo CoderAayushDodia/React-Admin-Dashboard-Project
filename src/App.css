@@ -592,18 +592,22 @@ input[type="radio"] {
   color: #535862 !important;
 }
 
-@media(max-width: 1026px) {
+.select-campaign, .select-activist-type{
+  width: 150px;
+}
+
+/* @media(max-width: 1026px) {
 .activist-navbar .select-dates input[type="date"].form-control,
   .activist-navbar .select-dates .date-input {
-    /* size */
-    width: 100px !important;
-    min-width: 80px !important;
-    max-width: 120px !important;
-    flex: 0 0 100px !important;
+    
+    width: 100px;
+    min-width: 80px ;
+    max-width: 120px ;
+    flex: 0 0 100px ;
     box-sizing: border-box;
     padding: 6px 8px !important;
   }
-}
+} */
 
 /* Medium <= 992px */
 @media screen and (max-width: 992px) {
