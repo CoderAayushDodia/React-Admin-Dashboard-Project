@@ -55,7 +55,7 @@ function AddReport({ addNewActivist }) {
       </div>
 
       <div className="d-flex justify-content-between align-items-center mb-lg-2 mb-md-2 mb-0 pt-lg-3 pt-md-2 pt-0 px-3 d-lg-none d-md-none d-flex">
-        <h4 className="d-lg-block d-md-block d-none">Add Sabhasad</h4>
+        <h4 className="d-lg-block d-md-block d-none">Add Report</h4>
         <div className="d-lg-none d-md-none d-flex gap-2 activist-action-buttons">
           <button
             type="button"
@@ -78,7 +78,7 @@ function AddReport({ addNewActivist }) {
         <form action="#" className="p-3">
           <div className="row g-3">
             <div className="col-md-4">
-              <h4 className="d-lg-none d-md-none d-block">Add Sabhasad</h4>
+              <h4 className="d-lg-none d-md-none d-block">Add Report</h4>
               <label className="form-label">
                 Date <span className="text-danger fw-bold">*</span>
               </label>
