@@ -42,7 +42,7 @@ function Header({ OpenSidebar, notifications }) {
           >
             <div className="d-flex justify-content-between align-items-center mb-2">
               <h6 className="fw-bold mb-0">Notification</h6>
-              <a href="#" className="text-danger small fw-bold">
+              <a href="/notifications" className="text-danger small fw-bold">
                 View All
               </a>
             </div>
