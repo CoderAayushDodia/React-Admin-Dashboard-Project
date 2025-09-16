@@ -170,7 +170,7 @@ function ReceiptsManagement() {
   const [error, setError] = useState(null);
 
   // ✅ Fetch Function
-  const fetchActivists = async () => {
+  const fetchReciept = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -208,7 +208,7 @@ function ReceiptsManagement() {
 
   // ✅ Fetch on mount
   useEffect(() => {
-    fetchActivists();
+    fetchReciept();
   }, []);
 
   return (
