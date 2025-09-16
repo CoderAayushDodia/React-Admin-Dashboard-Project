@@ -173,6 +173,7 @@ function SabhasadManagement() {
             "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` }), // add token if exists
           },
+          credentials : "include", // include cookies if needed
         }
       );
 
