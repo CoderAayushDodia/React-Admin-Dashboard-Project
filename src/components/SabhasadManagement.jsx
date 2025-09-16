@@ -201,7 +201,7 @@ function SabhasadManagement() {
       <div className="container-body">
         {/* Header */}
         <div className="d-flex justify-content-between align-items-center mb-3 px-3 pt-3 activist-header">
-          <h4 className="">Sabhasad Management</h4>
+          <h4>Sabhasad Management</h4>
 
           <div className="d-flex gap-2 activist-action-buttons">
             <button className="download-btn">
