@@ -163,7 +163,7 @@ function SabhasadManagement() {
       setLoading(true);
 
       // 🔑 Get token from localStorage (adjust key if stored differently)
-      const token = localStorage.getItem("token");
+      //const token = localStorage.getItem("token");
 
       const response = await fetch(
         "https://shramjivi-backend.onrender.com/api/receipts/",
@@ -171,7 +171,7 @@ function SabhasadManagement() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` }), // add token if exists
+            //...(token && { Authorization: `Bearer ${token}` }), // add token if exists
           },
           credentials : "include", // include cookies if needed
         }
