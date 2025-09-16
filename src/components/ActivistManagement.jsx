@@ -173,8 +173,267 @@
 // // }
 
 // src/components/ActivistManagement.jsx
+// import React, { useState, useEffect } from "react";
+// import { useNavigate, useLocation } from "react-router-dom";
+// import * as XLSX from "xlsx";
+// import { saveAs } from "file-saver";
+
+// function ActivistManagement() {
+//   const navigate = useNavigate();
+//   const location = useLocation();
+
+//   const [activists, setActivists] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+
+//   const API1 = "https://shramjivi-backend.onrender.com/api/activists/";
+
+//   // ✅ Fetch activists from backend API
+//   const fetchActivists = async () => {
+//     setLoading(true);
+//     setError(null);
+//     try {
+//       const response = await fetch(API1, {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json",
+//           // ✅ Add auth token if your API requires it
+//           // Authorization: `Bearer ${localStorage.getItem("token")}`,
+//         },
+//         credentials: "include", // ✅ required if API uses cookies/sessions
+//       });
+
+//       if (!response.ok) {
+//         throw new Error(`Failed to fetch activists: ${response.status}`);
+//       }
+
+//       const data = await response.json();
+
+//       // ✅ Ensure correct data format
+//       if (Array.isArray(data)) {
+//         setActivists(data);
+//       } else if (data?.results) {
+//         setActivists(data.results);
+//       } else {
+//         setActivists([]);
+//       }
+//     } catch (err) {
+//       console.error("fetchActivists error:", err);
+//       setError(err.message || "Unknown error occurred");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ✅ Fetch on mount
+//   useEffect(() => {
+//     fetchActivists();
+//   }, []);
+
+//   // ✅ Re-fetch if navigated back with updatedAt flag (after adding activist)
+//   useEffect(() => {
+//     if (location.state?.updatedAt) {
+//       fetchActivists();
+//       navigate(location.pathname, { replace: true, state: {} }); // clear state
+//     }
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [location.state?.updatedAt]);
+
+//   const handleDownloadExcel = () => {
+//     if (!activists || activists.length === 0) {
+//       alert("No data available to download.");
+//       return;
+//     }
+
+//     const formattedData = activists.map((activist, index) => {
+//       const formattedRole = activist.role
+//         ? activist.role
+//             .split("_")
+//             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+//             .join(" ")
+//         : "-";
+
+//       return {
+//         "#": index + 1,
+//         Name: activist.name,
+//         Role: formattedRole,
+//         Region: activist.region?.district ?? "-",
+//         Mobile: activist.phone ?? activist.mobile ?? "-",
+//       };
+//     });
+
+//     // 1️⃣ Convert to worksheet
+//     const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+//     // 2️⃣ Create a workbook & append worksheet
+//     const workbook = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(workbook, worksheet, "Activists");
+
+//     // 3️⃣ Generate Excel binary
+//     const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+
+//     // 4️⃣ Save file with today's date in filename
+//     const date = new Date().toISOString().slice(0, 10);
+//     const fileName = `activists_${date}.xlsx`;
+
+//     const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+//     saveAs(data, fileName);
+//   };
+
+//   return (
+//     <div className="main-container p-3">
+//       <div className="container-body">
+//         {/* Header Section */}
+//         <div className="d-flex justify-content-between align-items-center mb-3 px-3 pt-3 activist-header">
+//           <h4>Activists Management</h4>
+
+//           <div className="d-flex gap-2 activist-action-buttons">
+//             <button className="download-btn" onClick={handleDownloadExcel}>
+//               Download <i className="fa-solid fa-download me-1 me-sm-0"></i>
+//             </button>
+//             <button
+//               className="add-activist-btn"
+//               onClick={() => navigate("/activists/add")}
+//             >
+//               Add Activist <i className="fa-solid fa-plus me-1 me-sm-0"></i>
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Filters Section (keep your existing filter markup here if needed) */}
+
+//         <div className="table-wrapper">
+//           <div className="scroll-container">
+//             {loading ? (
+//               <p className="px-3">Loading activists...</p>
+//             ) : error ? (
+//               <p className="px-3 text-danger">Error: {error}</p>
+//             ) : activists.length === 0 ? (
+//               <p className="px-3">No activists found.</p>
+//             ) : (
+//               <table
+//                 className="table align-middle activist-table"
+//                 style={{
+//                   tableLayout: "auto",
+//                   minWidth: "800px",
+//                   whiteSpace: "nowrap",
+//                 }}
+//               >
+//                 <thead>
+//                   <tr className="border-bottom border-top">
+//                     <th>Name</th>
+//                     <th>Role</th>
+//                     <th>Region</th>
+//                     <th>Mobile</th>
+//                     <th className="text-center"></th>
+//                   </tr>
+//                 </thead>
+//                 {/* <tbody>
+//                   {activists.map((activist) => (
+//                     <tr key={activist.id ?? activist._id ?? Math.random()}>
+//                       <td>{activist.name}</td>
+//                       <td>{activist.role}</td>
+//                       <td>
+//                         {activist.region
+//                           ? [
+//                               activist.region.district,
+//                               activist.region.taluka,
+//                               activist.region.local_governance,
+//                               activist.region.village,
+//                             ]
+//                               .filter(Boolean)
+//                               .join(", ")
+//                           : "-"}
+//                       </td>
+//                       <td>{activist.phone ?? activist.mobile ?? "-"}</td>
+//                       <td className="text-center">
+//                         <i className="fa-regular fa-pen-to-square mx-2"></i>
+//                         <i className="fa-regular fa-trash-can mx-2"></i>
+//                         <i className="fa-regular fa-eye mx-2"></i>
+//                       </td>
+//                     </tr>
+//                   ))}
+//                 </tbody> */}
+//                 <tbody>
+//                   {activists.map((activist) => {
+//                     // ✅ Format role: convert snake_case -> Title Case
+//                     const formattedRole = activist.role
+//                       ? activist.role
+//                           .split("_") // split by underscore
+//                           .map(
+//                             (word) =>
+//                               word.charAt(0).toUpperCase() + word.slice(1)
+//                           ) // capitalize each part
+//                           .join(" ")
+//                       : "-";
+
+//                     return (
+//                       <tr key={activist.id ?? activist._id ?? Math.random()}>
+//                         <td>{activist.name}</td>
+
+//                         {/* ✅ Show formatted role */}
+//                         <td>{formattedRole}</td>
+
+//                         {/* ✅ Show only district */}
+//                         <td>{activist.region?.district ?? "-"}</td>
+
+//                         <td>{activist.phone ?? activist.mobile ?? "-"}</td>
+
+//                         <td className="text-center">
+//                           <i className="fa-regular fa-pen-to-square mx-2"></i>
+//                           <i className="fa-regular fa-trash-can mx-2"></i>
+//                           <i className="fa-regular fa-eye mx-2"></i>
+//                         </td>
+//                       </tr>
+//                     );
+//                   })}
+//                 </tbody>
+//               </table>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Pagination */}
+//         <div className="d-lg-flex d-md-flex justify-content-between align-items-center mt-3 px-3 pb-3 d-none">
+//           <button className="btn previous rounded-3">
+//             <i className="fa-solid fa-arrow-left"></i> Previous
+//           </button>
+//           <div>
+//             <button className="btn  mx-1 next-btn rounded-3">1</button>
+//             <button className="btn  mx-1">2</button>
+//             <button className="btn  mx-1">3</button>
+//             <span className="mx-2">...</span>
+//             <button className="btn m-1">8</button>
+//             <button className="btn m-1">9</button>
+//             <button className="btn m-1">10</button>
+//           </div>
+//           <button className="btn next-btn rounded-3">
+//             Next <i className="fa-solid fa-arrow-right"></i>
+//           </button>
+//         </div>
+//         <div className="d-sm-flex d-md-none d-none justify-content-between align-items-center mt-3 px-3 pb-3">
+//           <button className="btn previous rounded-3 p-2">
+//             <i className="fa-solid fa-arrow-left"></i>
+//           </button>
+//           <div>
+//             <span>Page 1 to 10</span>
+//           </div>
+//           <button className="btn next-btn rounded-3 p-2">
+//             <i className="fa-solid fa-arrow-right"></i>
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default ActivistManagement;
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function ActivistManagement() {
   const navigate = useNavigate();
@@ -185,8 +444,8 @@ function ActivistManagement() {
   const [error, setError] = useState(null);
 
   const API1 = "https://shramjivi-backend.onrender.com/api/activists/";
+  const API_DELETE = "https://shramjivi-backend.onrender.com/api/auth/users/";
 
-  // ✅ Fetch activists from backend API
   const fetchActivists = async () => {
     setLoading(true);
     setError(null);
@@ -195,10 +454,8 @@ function ActivistManagement() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // ✅ Add auth token if your API requires it
-          // Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        credentials: "include", // ✅ required if API uses cookies/sessions
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -206,15 +463,7 @@ function ActivistManagement() {
       }
 
       const data = await response.json();
-
-      // ✅ Ensure correct data format
-      if (Array.isArray(data)) {
-        setActivists(data);
-      } else if (data?.results) {
-        setActivists(data.results);
-      } else {
-        setActivists([]);
-      }
+      setActivists(Array.isArray(data) ? data : data?.results || []);
     } catch (err) {
       console.error("fetchActivists error:", err);
       setError(err.message || "Unknown error occurred");
@@ -223,29 +472,87 @@ function ActivistManagement() {
     }
   };
 
-  // ✅ Fetch on mount
   useEffect(() => {
     fetchActivists();
   }, []);
 
-  // ✅ Re-fetch if navigated back with updatedAt flag (after adding activist)
   useEffect(() => {
     if (location.state?.updatedAt) {
       fetchActivists();
-      navigate(location.pathname, { replace: true, state: {} }); // clear state
+      navigate(location.pathname, { replace: true, state: {} });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state?.updatedAt]);
+  }, [location.state?.updatedAt, navigate, location.pathname]);
+
+  const handleDownloadExcel = () => {
+    if (!activists.length) {
+      alert("No data available to download.");
+      return;
+    }
+
+    const formattedData = activists.map((activist, index) => {
+      const formattedRole = activist.role
+        ? activist.role
+            .split("_")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ")
+        : "-";
+
+      return {
+        "#": index + 1,
+        Name: activist.name,
+        Role: formattedRole,
+        Region: activist.region?.district ?? "-",
+        Mobile: activist.phone ?? activist.mobile ?? "-",
+      };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Activists");
+
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const date = new Date().toISOString().slice(0, 10);
+    const fileName = `activists_${date}.xlsx`;
+
+    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(data, fileName);
+  };
+
+  const handleEdit = (activist) => {
+    navigate("/activists/add", { state: { activist } });
+  };
+
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this activist?");
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`${API_DELETE}${id}/`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error(`Failed to delete activist: ${res.status}`);
+
+      alert("Activist deleted successfully");
+      fetchActivists();
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert(err.message || "Failed to delete activist");
+    }
+  };
 
   return (
     <div className="main-container p-3">
       <div className="container-body">
-        {/* Header Section */}
         <div className="d-flex justify-content-between align-items-center mb-3 px-3 pt-3 activist-header">
           <h4>Activists Management</h4>
 
           <div className="d-flex gap-2 activist-action-buttons">
-            <button className="download-btn">
+            <button className="download-btn" onClick={handleDownloadExcel}>
               Download <i className="fa-solid fa-download me-1 me-sm-0"></i>
             </button>
             <button
@@ -257,8 +564,6 @@ function ActivistManagement() {
           </div>
         </div>
 
-        {/* Filters Section (keep your existing filter markup here if needed) */}
-
         <div className="table-wrapper">
           <div className="scroll-container">
             {loading ? (
@@ -268,78 +573,42 @@ function ActivistManagement() {
             ) : activists.length === 0 ? (
               <p className="px-3">No activists found.</p>
             ) : (
-              <table
-                className="table align-middle activist-table"
-                style={{
-                  tableLayout: "auto",
-                  minWidth: "800px",
-                  whiteSpace: "nowrap",
-                }}
-              >
+              <table className="table align-middle activist-table">
                 <thead>
                   <tr className="border-bottom border-top">
                     <th>Name</th>
                     <th>Role</th>
                     <th>Region</th>
                     <th>Mobile</th>
-                    <th className="text-center"></th>
+                    <th className="text-center">Actions</th>
                   </tr>
                 </thead>
-                {/* <tbody>
-                  {activists.map((activist) => (
-                    <tr key={activist.id ?? activist._id ?? Math.random()}>
-                      <td>{activist.name}</td>
-                      <td>{activist.role}</td>
-                      <td>
-                        {activist.region
-                          ? [
-                              activist.region.district,
-                              activist.region.taluka,
-                              activist.region.local_governance,
-                              activist.region.village,
-                            ]
-                              .filter(Boolean)
-                              .join(", ")
-                          : "-"}
-                      </td>
-                      <td>{activist.phone ?? activist.mobile ?? "-"}</td>
-                      <td className="text-center">
-                        <i className="fa-regular fa-pen-to-square mx-2"></i>
-                        <i className="fa-regular fa-trash-can mx-2"></i>
-                        <i className="fa-regular fa-eye mx-2"></i>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody> */}
                 <tbody>
                   {activists.map((activist) => {
-                    // ✅ Format role: convert snake_case -> Title Case
                     const formattedRole = activist.role
                       ? activist.role
-                          .split("_") // split by underscore
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() + word.slice(1)
-                          ) // capitalize each part
+                          .split("_")
+                          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                           .join(" ")
                       : "-";
 
                     return (
-                      <tr key={activist.id ?? activist._id ?? Math.random()}>
+                      <tr key={activist.id}>
                         <td>{activist.name}</td>
-
-                        {/* ✅ Show formatted role */}
                         <td>{formattedRole}</td>
-
-                        {/* ✅ Show only district */}
                         <td>{activist.region?.district ?? "-"}</td>
-
                         <td>{activist.phone ?? activist.mobile ?? "-"}</td>
-
                         <td className="text-center">
-                          <i className="fa-regular fa-pen-to-square mx-2"></i>
-                          <i className="fa-regular fa-trash-can mx-2"></i>
-                          <i className="fa-regular fa-eye mx-2"></i>
+                          <i
+                            className="fa-regular fa-pen-to-square mx-2"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>  {console.log("Editing activist:", activist), handleEdit(activist)}} 
+                          ></i>
+                          <i
+                            className="fa-regular fa-trash-can mx-2"
+                            style={{ cursor: "pointer", color: "red" }}
+                            onClick={() => handleDelete(activist.id)}
+                          ></i>
                         </td>
                       </tr>
                     );
@@ -348,36 +617,6 @@ function ActivistManagement() {
               </table>
             )}
           </div>
-        </div>
-
-        {/* Pagination */}
-        <div className="d-lg-flex d-md-flex justify-content-between align-items-center mt-3 px-3 pb-3 d-none">
-          <button className="btn previous rounded-3">
-            <i className="fa-solid fa-arrow-left"></i> Previous
-          </button>
-          <div>
-            <button className="btn  mx-1 next-btn rounded-3">1</button>
-            <button className="btn  mx-1">2</button>
-            <button className="btn  mx-1">3</button>
-            <span className="mx-2">...</span>
-            <button className="btn m-1">8</button>
-            <button className="btn m-1">9</button>
-            <button className="btn m-1">10</button>
-          </div>
-          <button className="btn next-btn rounded-3">
-            Next <i className="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-        <div className="d-sm-flex d-md-none d-none justify-content-between align-items-center mt-3 px-3 pb-3">
-          <button className="btn previous rounded-3 p-2">
-            <i className="fa-solid fa-arrow-left"></i>
-          </button>
-          <div>
-            <span>Page 1 to 10</span>
-          </div>
-          <button className="btn next-btn rounded-3 p-2">
-            <i className="fa-solid fa-arrow-right"></i>
-          </button>
         </div>
       </div>
     </div>
