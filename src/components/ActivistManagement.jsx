@@ -442,6 +442,7 @@ function ActivistManagement() {
   const [activists, setActivists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
 
   const API1 = "https://shramjivi-backend.onrender.com/api/activists/";
   const API_DELETE = "https://shramjivi-backend.onrender.com/api/auth/users/";
@@ -452,15 +453,11 @@ function ActivistManagement() {
     try {
       const response = await fetch(API1, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch activists: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Failed to fetch activists: ${response.status}`);
 
       const data = await response.json();
       setActivists(Array.isArray(data) ? data : data?.results || []);
@@ -484,27 +481,17 @@ function ActivistManagement() {
   }, [location.state?.updatedAt, navigate, location.pathname]);
 
   const handleDownloadExcel = () => {
-    if (!activists.length) {
-      alert("No data available to download.");
-      return;
-    }
+    if (!activists.length) return alert("No data available to download.");
 
-    const formattedData = activists.map((activist, index) => {
-      const formattedRole = activist.role
-        ? activist.role
-            .split("_")
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ")
-        : "-";
-
-      return {
-        "#": index + 1,
-        Name: activist.name,
-        Role: formattedRole,
-        Region: activist.region?.district ?? "-",
-        Mobile: activist.phone ?? activist.mobile ?? "-",
-      };
-    });
+    const formattedData = activists.map((a, i) => ({
+      "#": i + 1,
+      Name: a.name,
+      Role: a.role
+        ? a.role.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
+        : "-",
+      Region: a.region?.district ?? "-",
+      Mobile: a.phone ?? a.mobile ?? "-",
+    }));
 
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
     const workbook = XLSX.utils.book_new();
@@ -513,30 +500,22 @@ function ActivistManagement() {
     const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
     const date = new Date().toISOString().slice(0, 10);
     const fileName = `activists_${date}.xlsx`;
-
-    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(data, fileName);
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, fileName);
   };
 
-  const handleEdit = (activist) => {
-    navigate("/activists/add", { state: { activist } });
-  };
+  const handleEdit = (activist) => navigate("/activists/add", { state: { activist } });
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this activist?");
-    if (!confirmed) return;
-
+    if (!window.confirm("Are you sure you want to delete this activist?")) return;
     try {
       const res = await fetch(`${API_DELETE}${id}/`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         credentials: "include",
       });
 
       if (!res.ok) throw new Error(`Failed to delete activist: ${res.status}`);
-
       alert("Activist deleted successfully");
       fetchActivists();
     } catch (err) {
@@ -545,35 +524,75 @@ function ActivistManagement() {
     }
   };
 
+  // 🔎 Filter activists based on search
+  const filteredActivists = activists.filter((a) =>
+    a.name?.toLowerCase().includes(search.toLowerCase()) ||
+    a.role?.toLowerCase().includes(search.toLowerCase()) ||
+    a.region?.district?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="main-container p-3">
       <div className="container-body">
+        {/* Header */}
         <div className="d-flex justify-content-between align-items-center mb-3 px-3 pt-3 activist-header">
           <h4>Activists Management</h4>
-
           <div className="d-flex gap-2 activist-action-buttons">
             <button className="download-btn" onClick={handleDownloadExcel}>
-              Download <i className="fa-solid fa-download me-1 me-sm-0"></i>
+              Download <i className="fa-solid fa-download me-1"></i>
             </button>
-            <button
-              className="add-activist-btn"
-              onClick={() => navigate("/activists/add")}
-            >
-              Add Activist <i className="fa-solid fa-plus me-1 me-sm-0"></i>
+            <button className="add-activist-btn" onClick={() => navigate("/activists/add")}>
+              Add Activist <i className="fa-solid fa-plus me-1"></i>
             </button>
           </div>
         </div>
 
+        {/* Filters Section */}
+        <div className="d-flex flex-lg-nowrap flex-wrap gap-3 mb-3 px-3 py-2 activist-navbar w-100">
+          {/* Search */}
+          <div className="header-left rounded d-flex align-items-center position-relative flex-grow-1">
+            <span><i className="fa-solid fa-magnifying-glass"></i></span>
+            <input
+              placeholder="Search"
+              className="border-0 shadow-none form-control flex-grow-1"
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          {/* Region Select (future filter) */}
+          <select className="form-select select-region flex-lg-grow-0">
+            <option>Select Region</option>
+            <option>Mumbai</option>
+            <option>Pune</option>
+            <option>Nasik</option>
+          </select>
+
+          {/* Date Range (UI only for now) */}
+          <div className="d-flex align-items-center gap-1 select-date flex-lg-grow-0">
+            <input type="date" className="form-control" />
+            <span>-</span>
+            <input type="date" className="form-control" />
+          </div>
+
+          <button className="apply-btn flex-lg-grow-0">Apply</button>
+        </div>
+
+        {/* Table */}
         <div className="table-wrapper">
           <div className="scroll-container">
             {loading ? (
               <p className="px-3">Loading activists...</p>
             ) : error ? (
               <p className="px-3 text-danger">Error: {error}</p>
-            ) : activists.length === 0 ? (
+            ) : filteredActivists.length === 0 ? (
               <p className="px-3">No activists found.</p>
             ) : (
-              <table className="table align-middle activist-table">
+              <table
+                className="table align-middle activist-table"
+                style={{ tableLayout: "auto", minWidth: "800px", whiteSpace: "nowrap" }}
+              >
                 <thead>
                   <tr className="border-bottom border-top">
                     <th>Name</th>
@@ -584,12 +603,9 @@ function ActivistManagement() {
                   </tr>
                 </thead>
                 <tbody>
-                  {activists.map((activist) => {
+                  {filteredActivists.map((activist) => {
                     const formattedRole = activist.role
-                      ? activist.role
-                          .split("_")
-                          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                          .join(" ")
+                      ? activist.role.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
                       : "-";
 
                     return (
@@ -602,7 +618,7 @@ function ActivistManagement() {
                           <i
                             className="fa-regular fa-pen-to-square mx-2"
                             style={{ cursor: "pointer" }}
-                            onClick={() =>  {console.log("Editing activist:", activist), handleEdit(activist)}} 
+                            onClick={() => handleEdit(activist)}
                           ></i>
                           <i
                             className="fa-regular fa-trash-can mx-2"
@@ -618,9 +634,29 @@ function ActivistManagement() {
             )}
           </div>
         </div>
+
+        {/* Pagination (UI Only for Now) */}
+        <div className="d-lg-flex d-md-flex justify-content-between align-items-center mt-3 px-3 pb-3 d-none">
+          <button className="btn previous rounded-3">
+            <i className="fa-solid fa-arrow-left"></i> Previous
+          </button>
+          <div>
+            <button className="btn mx-1 next-btn rounded-3">1</button>
+            <button className="btn mx-1">2</button>
+            <button className="btn mx-1">3</button>
+            <span className="mx-2">...</span>
+            <button className="btn m-1">8</button>
+            <button className="btn m-1">9</button>
+            <button className="btn m-1">10</button>
+          </div>
+          <button className="btn next-btn rounded-3">
+            Next <i className="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
 export default ActivistManagement;
+
