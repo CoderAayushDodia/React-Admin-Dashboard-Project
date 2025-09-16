@@ -27,7 +27,7 @@ function AddSabhasad({ addNewActivist }) {
     <div className="main-container p-3">
       <div className="container-body mb-4 d-lg-block d-md-block d-none">
         <div className="add-activist-header d-lg-flex d-md-flex d-none align-items-center gap-2 pt-3 px-3 ">
-          <span class="material-symbols-outlined">home</span>
+          <span className="material-symbols-outlined">home</span>
           <i className="fa fa-angle-right"></i>
           <p className="mb-0">Sabhasad Management</p>
           <i className="fa fa-angle-right"></i>
