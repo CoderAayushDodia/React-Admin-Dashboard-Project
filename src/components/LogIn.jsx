@@ -99,7 +99,7 @@ function LogIn() {
 
   return (
     <div className="login-container">
-      <img src="/image 5.png" alt="Logo" />
+      <img src="/image 6.png" alt="Logo" />
 
       <div className="title-text">
         <h1 className="mb-4">श्रमजीवी संघटना (महाराष्ट्र)</h1>

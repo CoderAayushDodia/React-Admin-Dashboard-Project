@@ -20,7 +20,7 @@ function Header({ OpenSidebar, notifications }) {
         />
       </div>
       <div className="header-title d-flex align-items-center gap-2 d-block d-lg-none">
-        <img src="/image 5.png" alt="Logo" />
+        <img src="/image 6.png" alt="Logo" />
         <h2 className="mb-0">श्रमजीवी संघटना (महाराष्ट्र)</h2>
       </div>
       <div className="header-right d-flex align-items-center position-relative">

@@ -304,7 +304,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar, menuItems = [] }) {
     >
       {/* Logo + Close */}
       <div className="sidebar-title px-3 py-3">
-        <img src="/image 5.png" alt="Logo" />
+        <img src="/image 5.png" alt="Logo" style={{ transform: 'scaleX(-1)' }} />
         <span className="close-icon" onClick={OpenSidebar}>
           <i className="fa-solid fa-xmark"></i>
         </span>

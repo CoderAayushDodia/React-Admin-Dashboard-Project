@@ -2002,6 +2002,7 @@
 // export default Home;
 
 import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import NestedSelect from "./NestedSelect";
 import SimpleDropdown from "./SimpleDropdown";
 import {
@@ -2031,6 +2032,7 @@ Chart.register(
 );
 
 function Home() {
+  const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -2248,6 +2250,10 @@ function Home() {
                 {" "}
                 <a
                   href="#!"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/receipts");
+                  }}
                   className="text-decoration-none rounded-2 px-2 px-lg-3 py-2 distribute-btn"
                 >
                   Distribute Receipts
@@ -2256,6 +2262,10 @@ function Home() {
               <li>
                 <a
                   href="#!"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/announcements");
+                  }}
                   className="text-decoration-none rounded-2 px-sm-1 px-md-2 px-lg-3 py-2 send-btn"
                 >
                   Send Announcement
