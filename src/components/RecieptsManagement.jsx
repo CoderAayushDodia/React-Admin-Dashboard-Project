@@ -6,7 +6,6 @@
 // function ReceiptsManagement() {
 //   const navigate = useNavigate();
 //   const [activists, setActivists] = useState([]);
-  
 
 //   useEffect(() => {
 //     setActivists(dashboardData.ActivistManagement || []);
@@ -20,7 +19,7 @@
 
 //           <div className="d-flex gap-2 activist-action-buttons">
 //             <button className="download-btn">
-//              Download <i className="fa-solid fa-download me-1"></i> 
+//              Download <i className="fa-solid fa-download me-1"></i>
 //             </button>
 //             <button
 //               className="add-activist-btn"
@@ -298,7 +297,6 @@ function ReceiptsManagement() {
                     <th>Age</th>
                     <th>Mobile</th>
                     <th>Collected Amount</th>
-                    <th className="text-center"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -315,11 +313,6 @@ function ReceiptsManagement() {
                       <td>{receipt.assigned_age || "-"}</td>
                       <td>{receipt.assigned_phone || "-"}</td>
                       <td>{receipt.total_collection}</td>
-                      <td className="text-center">
-                        <i className="fa-regular fa-pen-to-square mx-2"></i>
-                        <i className="fa-regular fa-trash-can mx-2"></i>
-                        <i className="fa-regular fa-eye mx-2"></i>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -337,7 +330,6 @@ function ReceiptsManagement() {
 }
 
 export default ReceiptsManagement;
-
 
 // {
 //   activists.map((activist) => (
