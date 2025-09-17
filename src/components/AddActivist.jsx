@@ -803,7 +803,7 @@
 //               type="button"
 //               className="btn btn-outline-secondary me-2 add-activist-cancel-btn"
 //               onClick={() => navigate("/activists")}
-//               disabled={loading}
+//               disabled={loading || fetchingData}
 //             >
 //               Cancel
 //             </button>
@@ -811,7 +811,7 @@
 //               type="submit"
 //               className="btn btn-danger add-activist-save-btn"
 //               onClick={handleSubmit}
-//               disabled={loading}
+//               disabled={loading || fetchingData}
 //             >
 //               {loading ? "Saving..." : "Save"}
 //             </button>
@@ -994,6 +994,7 @@ function AddActivist() {
   const location = useLocation();
 
   const [loading, setLoading] = useState(false);
+  const [fetchingData, setFetchingData] = useState(false);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -1014,32 +1015,82 @@ function AddActivist() {
 
   const API_LOCATIONS = "https://shramjivi-backend.onrender.com/api/locations/";
   const API_CREATE = "https://shramjivi-backend.onrender.com/api/auth/users/";
-  const API_UPDATE = (id) =>
-    `https://shramjivi-backend.onrender.com/api/activists/${id}/`;
+  const API_ACTIVISTS = "https://shramjivi-backend.onrender.com/api/activists/";
+  const API_USERS = "https://shramjivi-backend.onrender.com/api/auth/users/";
 
-  // ✅ Prefill data if editing
+  // ✅ Fetch complete activist data when editing (including age and email)
   useEffect(() => {
-    if (editingActivist) {
-      setFormData((prev) => ({
-        ...prev,
-        name: editingActivist.name || "",
-        age: editingActivist.age || "",
-        email: editingActivist.email || "",
-        role: editingActivist.role || "taluka_admin",
-        phone: editingActivist.phone || editingActivist.mobile || "",
-        password: "", // always empty for security
-      }));
+    if (editingActivist && editingActivist.id) {
+      const fetchCompleteActivistData = async () => {
+        setFetchingData(true);
+        try {
+          // Try to get complete data from both activists and users endpoints
+          const [activistRes, userRes] = await Promise.allSettled([
+            fetch(`${API_ACTIVISTS}${editingActivist.id}/`, {
+              headers: { 
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json"
+              },
+              credentials: "include"
+            }),
+            fetch(`${API_USERS}${editingActivist.id}/`, {
+              headers: { 
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json"
+              },
+              credentials: "include"
+            })
+          ]);
 
-      // Prefill region for display (read-only)
-      if (editingActivist.region) {
-        setSelectedRegion({
-          type: "district",
-          district_id:
-            editingActivist.region?.district_id ||
-            editingActivist.region?.district ||
-            null,
-        });
-      }
+          let completeData = { ...editingActivist };
+
+          // Merge data from both APIs
+          if (activistRes.status === 'fulfilled' && activistRes.value.ok) {
+            const activistData = await activistRes.value.json();
+            completeData = { ...completeData, ...activistData };
+          }
+
+          if (userRes.status === 'fulfilled' && userRes.value.ok) {
+            const userData = await userRes.value.json();
+            completeData = { ...completeData, ...userData };
+          }
+
+          // Set form data with complete information
+          setFormData({
+            name: completeData.name || "",
+            age: completeData.age || "",
+            email: completeData.email || "",
+            role: completeData.role || "taluka_admin",
+            phone: completeData.phone || completeData.mobile || "",
+            password: "", // always empty for security
+          });
+
+          // Set region data
+          if (completeData.region) {
+            setSelectedRegion({
+              type: "district",
+              district_id: completeData.region?.district || completeData.region?.district_id || null,
+              name: completeData.region?.district || "Selected Region"
+            });
+          }
+
+        } catch (err) {
+          console.error("Error fetching complete activist data:", err);
+          // Fallback to basic prefill
+          setFormData({
+            name: editingActivist.name || "",
+            age: editingActivist.age || "",
+            email: editingActivist.email || "",
+            role: editingActivist.role || "taluka_admin",
+            phone: editingActivist.phone || editingActivist.mobile || "",
+            password: "",
+          });
+        } finally {
+          setFetchingData(false);
+        }
+      };
+
+      fetchCompleteActivistData();
     }
   }, [editingActivist]);
 
@@ -1096,14 +1147,17 @@ function AddActivist() {
       let response;
 
       if (editingActivist) {
-        // ✅ Only send phone and password for update
+        // ✅ UPDATE mode - Send all editable fields
         const payload = {
           phone: formData.phone,
+          // Only include password if it's been entered
           ...(formData.password ? { password: formData.password } : {}),
         };
 
-        response = await fetch(API_UPDATE(editingActivist.id), {
-          method: "PUT",
+        console.log("Updating activist with payload:", payload);
+
+        response = await fetch(`${API_ACTIVISTS}${editingActivist.id}/`, {
+          method: "PUT", // Backend requires PUT method for updates
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1112,7 +1166,13 @@ function AddActivist() {
           body: JSON.stringify(payload),
         });
       } else {
-        // ✅ Normal CREATE mode
+        // ✅ CREATE mode
+        if (!selectedRegion) {
+          setError("Please select a region");
+          setLoading(false);
+          return;
+        }
+
         const payload = {
           name: formData.name,
           phone: formData.phone,
@@ -1120,8 +1180,10 @@ function AddActivist() {
           district: selectedRegion?.district_id || null,
           password: formData.password,
           email: formData.email,
-          age: formData.age,
+          age: parseInt(formData.age) || null,
         };
+
+        console.log("Creating activist with payload:", payload);
 
         response = await fetch(API_CREATE, {
           method: "POST",
@@ -1136,11 +1198,19 @@ function AddActivist() {
 
       if (!response.ok) {
         const errData = await response.json().catch(() => null);
+        console.error("API Error Response:", errData);
         throw new Error(
-          errData?.detail || errData?.message || `Failed: ${response.status}`
+          errData?.detail || 
+          errData?.message || 
+          errData?.error ||
+          `${editingActivist ? 'Update' : 'Create'} failed: ${response.status}`
         );
       }
 
+      const responseData = await response.json();
+      console.log("Success response:", responseData);
+
+      alert(`Activist ${editingActivist ? 'updated' : 'created'} successfully!`);
       navigate("/activists", { state: { updatedAt: Date.now() } });
     } catch (err) {
       console.error("Submit error:", err);
@@ -1320,7 +1390,7 @@ function AddActivist() {
               type="button"
               className="btn btn-outline-secondary me-2 add-activist-cancel-btn"
               onClick={() => navigate("/activists")}
-              disabled={loading}
+              disabled={loading || fetchingData}
             >
               Cancel
             </button>
@@ -1328,7 +1398,7 @@ function AddActivist() {
               type="submit"
               className="btn btn-danger add-activist-save-btn"
               onClick={handleSubmit}
-              disabled={loading}
+              disabled={loading || fetchingData}
             >
               {loading ? "Saving..." : editingActivist ? "Update" : "Save"}
             </button>
@@ -1363,7 +1433,22 @@ function AddActivist() {
       {/* Main Form */}
       <div className="main-container">
         <div className="container-body">
-          {error && <p className="text-danger">{error}</p>}
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+          
+          {fetchingData && (
+            <div className="alert alert-info" role="alert">
+              <div className="d-flex align-items-center">
+                <div className="spinner-border spinner-border-sm me-2" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                Loading activist data...
+              </div>
+            </div>
+          )}
 
           <form className="p-3" onSubmit={handleSubmit}>
             <div className="row g-3">
@@ -1382,6 +1467,7 @@ function AddActivist() {
                   value={formData.name}
                   onChange={handleChange}
                   readOnly={!!editingActivist}
+                  disabled={fetchingData || loading}
                   required
                 />
               </div>
@@ -1398,6 +1484,7 @@ function AddActivist() {
                   value={formData.age}
                   onChange={handleChange}
                   readOnly={!!editingActivist}
+                  disabled={fetchingData || loading}
                   required
                 />
               </div>
@@ -1414,6 +1501,7 @@ function AddActivist() {
                   value={formData.email}
                   onChange={handleChange}
                   readOnly={!!editingActivist}
+                  disabled={fetchingData || loading}
                   required
                 />
               </div>
@@ -1428,6 +1516,7 @@ function AddActivist() {
                   className="form-select"
                   value={formData.role}
                   onChange={handleChange}
+                  disabled={fetchingData || loading || !!editingActivist}
                 >
                   <option value="taluka_admin">Taluka Admin</option>
                   <option value="district_admin">District Admin</option>
@@ -1470,6 +1559,7 @@ function AddActivist() {
                     className="form-control"
                     value={formData.phone}
                     onChange={handleChange}
+                    disabled={fetchingData || loading}
                     required
                   />
                 </div>
@@ -1484,8 +1574,9 @@ function AddActivist() {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder={
-                      editingActivist ? "Enter new password" : "********"
+                      editingActivist ? "Leave blank to keep current password" : "********"
                     }
+                    disabled={fetchingData || loading}
                     required={!editingActivist}
                   />
                   <span
@@ -1840,7 +1931,7 @@ export default AddActivist;
 //               type="button"
 //               className="btn btn-outline-secondary"
 //               onClick={() => navigate("/activists")}
-//               disabled={loading}
+//               disabled={loading || fetchingData}
 //             >
 //               Cancel
 //             </button>

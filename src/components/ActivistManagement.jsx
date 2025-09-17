@@ -430,7 +430,7 @@
 // export default ActivistManagement;
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -442,7 +442,22 @@ function ActivistManagement() {
   const [activists, setActivists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [search, setSearch] = useState("");
+  
+  // ✅ Pagination States
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10; // Fixed page size
+  
+  // ✅ Enhanced Filter States - Search works independently, filters use apply button
+  const [search, setSearch] = useState(""); // Real-time search
+  
+  // Filter states (apply button system)
+  const [pendingRegion, setPendingRegion] = useState("");
+  const [pendingRole, setPendingRole] = useState("");
+  const [appliedRegion, setAppliedRegion] = useState("");
+  const [appliedRole, setAppliedRole] = useState("");
+  
+  const [availableRegions, setAvailableRegions] = useState([]);
+  const [availableRoles, setAvailableRoles] = useState([]);
 
   const API1 = "https://shramjivi-backend.onrender.com/api/activists/";
   const API_DELETE = "https://shramjivi-backend.onrender.com/api/auth/users/";
@@ -460,13 +475,37 @@ function ActivistManagement() {
       if (!response.ok) throw new Error(`Failed to fetch activists: ${response.status}`);
 
       const data = await response.json();
-      setActivists(Array.isArray(data) ? data : data?.results || []);
+      const activistsList = Array.isArray(data) ? data : data?.results || [];
+      setActivists(activistsList);
+      
+      // ✅ Extract unique regions and roles for filter dropdowns
+      extractFilters(activistsList);
     } catch (err) {
       console.error("fetchActivists error:", err);
       setError(err.message || "Unknown error occurred");
     } finally {
       setLoading(false);
     }
+  };
+
+  // ✅ Extract unique regions and roles from activists data
+  const extractFilters = (activistsList) => {
+    // Extract unique regions
+    const regions = [...new Set(
+      activistsList
+        .map(a => a.region?.district || a.region?.taluka || a.region?.name)
+        .filter(Boolean)
+    )].sort();
+    
+    // Extract unique roles
+    const roles = [...new Set(
+      activistsList
+        .map(a => a.role)
+        .filter(Boolean)
+    )].sort();
+    
+    setAvailableRegions(regions);
+    setAvailableRoles(roles);
   };
 
   useEffect(() => {
@@ -524,12 +563,85 @@ function ActivistManagement() {
     }
   };
 
-  // 🔎 Filter activists based on search
-  const filteredActivists = activists.filter((a) =>
-    a.name?.toLowerCase().includes(search.toLowerCase()) ||
-    a.role?.toLowerCase().includes(search.toLowerCase()) ||
-    a.region?.district?.toLowerCase().includes(search.toLowerCase())
-  );
+  // 🔎 Optimized filtering logic - search is real-time, filters use apply button
+  const filteredActivists = useMemo(() => {
+    return activists.filter((activist) => {
+      // ✅ Search filter - real-time search across name, role, region, phone
+      const searchLower = search.toLowerCase().trim();
+      const matchesSearch = !searchLower || (
+        activist.name?.toLowerCase().includes(searchLower) ||
+        activist.role?.toLowerCase().includes(searchLower) ||
+        activist.region?.district?.toLowerCase().includes(searchLower) ||
+        activist.region?.taluka?.toLowerCase().includes(searchLower) ||
+        activist.phone?.toLowerCase().includes(searchLower) ||
+        activist.mobile?.toLowerCase().includes(searchLower) ||
+        activist.email?.toLowerCase().includes(searchLower)
+      );
+
+      // ✅ Region filter - apply button system
+      const activistRegion = activist.region?.district || activist.region?.taluka || activist.region?.name;
+      const matchesRegion = !appliedRegion || activistRegion === appliedRegion;
+
+      // ✅ Role filter - apply button system
+      const matchesRole = !appliedRole || activist.role === appliedRole;
+
+      return matchesSearch && matchesRegion && matchesRole;
+    });
+  }, [activists, search, appliedRegion, appliedRole]);
+
+  // ✅ Pagination logic for filtered activists
+  const totalPages = Math.ceil(filteredActivists.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedActivists = filteredActivists.slice(startIndex, endIndex);
+  const hasNext = currentPage < totalPages;
+  const hasPrevious = currentPage > 1;
+
+  // ✅ Apply filters function - applies only region and role filters
+  const applyFilters = () => {
+    setAppliedRegion(pendingRegion);
+    setAppliedRole(pendingRole);
+    
+    console.log("Filters applied:", {
+      region: pendingRegion,
+      role: pendingRole
+    });
+  };
+
+  // ✅ Clear all filters function - clears region and role filters only
+  const clearFilters = () => {
+    // Clear pending states (UI)
+    setPendingRegion("");
+    setPendingRole("");
+    
+    // Clear applied states (actual filtering)
+    setAppliedRegion("");
+    setAppliedRole("");
+  };
+
+  // ✅ Pagination functions
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (hasPrevious) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (hasNext) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // ✅ Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, appliedRegion, appliedRole]);
 
   return (
     <div className="main-container p-3">
@@ -553,30 +665,135 @@ function ActivistManagement() {
           <div className="header-left rounded d-flex align-items-center position-relative flex-grow-1">
             <span><i className="fa-solid fa-magnifying-glass"></i></span>
             <input
-              placeholder="Search"
+              placeholder="Search by name, role, region, phone..."
               className="border-0 shadow-none form-control flex-grow-1"
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+            {/* ✅ Clear search button */}
+            {search && (
+              <span 
+                className="position-absolute end-0 me-3" 
+                style={{ cursor: 'pointer', zIndex: 10 }}
+                onClick={() => setSearch("")}
+              >
+                <i className="fa-solid fa-times text-muted"></i>
+              </span>
+            )}
           </div>
 
-          {/* Region Select (future filter) */}
-          <select className="form-select select-region flex-lg-grow-0">
-            <option>Select Region</option>
-            <option>Mumbai</option>
-            <option>Pune</option>
-            <option>Nasik</option>
+          {/* ✅ Region Filter - Now Functional */}
+          <select 
+            className="form-select select-region flex-lg-grow-0"
+            value={pendingRegion}
+            onChange={(e) => setPendingRegion(e.target.value)}
+          >
+            <option value="">All Regions</option>
+            {availableRegions.map((region) => (
+              <option key={region} value={region}>
+                {region}
+              </option>
+            ))}
           </select>
 
-          {/* Date Range (UI only for now) */}
-          <div className="d-flex align-items-center gap-1 select-date flex-lg-grow-0">
-            <input type="date" className="form-control" />
-            <span>-</span>
-            <input type="date" className="form-control" />
-          </div>
+          {/* ✅ Role Filter - New Addition */}
+          <select 
+            className="form-select select-region flex-lg-grow-0"
+            value={pendingRole}
+            onChange={(e) => setPendingRole(e.target.value)}
+          >
+            <option value="">All Roles</option>
+            {availableRoles.map((role) => (
+              <option key={role} value={role}>
+                {role ? role.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ") : role}
+              </option>
+            ))}
+          </select>
 
-          <button className="apply-btn flex-lg-grow-0">Apply</button>
+
+          {/* ✅ Apply Button - Matches theme styling */}
+          <button 
+            className="apply-btn flex-lg-grow-0 d-flex align-items-center"
+            onClick={applyFilters}
+            title="Apply current filters"
+            style={{ 
+              whiteSpace: 'nowrap',
+              minHeight: '38px',
+              fontSize: '14px',
+              fontWeight: '500'
+            }}
+          >
+            <i className="fa-solid fa-check me-1"></i>
+            Apply
+          </button>
+
+          {/* ✅ Clear Filters Button - Matches theme styling */}
+          <button 
+            className="btn btn-outline-secondary flex-lg-grow-0 d-flex align-items-center"
+            onClick={clearFilters}
+            title="Clear all filters"
+            style={{ 
+              whiteSpace: 'nowrap',
+              minHeight: '38px',
+              fontSize: '14px',
+              fontWeight: '500'
+            }}
+          >
+            <i className="fa-solid fa-times me-1"></i>
+            <span className="d-none d-lg-inline">Clear</span>
+          </button>
+        </div>
+
+        {/* ✅ Unapplied Changes Indicator - Only for region and role filters */}
+        {(pendingRegion !== appliedRegion || pendingRole !== appliedRole) && (
+          <div className="alert alert-warning py-2 px-3 mx-3 mb-2 d-flex align-items-center" role="alert">
+            <i className="fa-solid fa-exclamation-triangle me-2"></i>
+            <span className="small">You have unapplied filter changes. Click "Apply" to see results.</span>
+          </div>
+        )}
+
+        {/* ✅ Filter Results Info */}
+        <div className="d-flex justify-content-between align-items-center px-3 mb-2">
+          <div className="text-muted small">
+            Showing {filteredActivists.length} of {activists.length} activists
+            {(search || appliedRegion || appliedRole) && (
+              <span className="text-primary"> (filtered)</span>
+            )}
+            {totalPages > 1 && (
+              <span className="text-muted"> • Page {currentPage} of {totalPages}</span>
+            )}
+          </div>
+          
+          {/* ✅ Active Filters Display - Shows search and applied filters with grey theme */}
+          {(search || appliedRegion || appliedRole) && (
+            <div className="d-flex flex-wrap gap-1">
+              {search && (
+                <span className="badge bg-light text-dark border">
+                  Search: "{search}" 
+                  <i className="fa-solid fa-times ms-1" style={{ cursor: 'pointer' }} onClick={() => setSearch("")}></i>
+                </span>
+              )}
+              {appliedRegion && (
+                <span className="badge bg-light text-dark border">
+                  Region: {appliedRegion}
+                  <i className="fa-solid fa-times ms-1" style={{ cursor: 'pointer' }} onClick={() => {
+                    setAppliedRegion("");
+                    setPendingRegion("");
+                  }}></i>
+                </span>
+              )}
+              {appliedRole && (
+                <span className="badge bg-light text-dark border">
+                  Role: {appliedRole.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+                  <i className="fa-solid fa-times ms-1" style={{ cursor: 'pointer' }} onClick={() => {
+                    setAppliedRole("");
+                    setPendingRole("");
+                  }}></i>
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Table */}
@@ -603,7 +820,7 @@ function ActivistManagement() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredActivists.map((activist) => {
+                  {paginatedActivists.map((activist) => {
                     const formattedRole = activist.role
                       ? activist.role.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
                       : "-";
@@ -635,24 +852,97 @@ function ActivistManagement() {
           </div>
         </div>
 
-        {/* Pagination (UI Only for Now) */}
-        <div className="d-lg-flex d-md-flex justify-content-between align-items-center mt-3 px-3 pb-3 d-none">
-          <button className="btn previous rounded-3">
-            <i className="fa-solid fa-arrow-left"></i> Previous
-          </button>
-          <div>
-            <button className="btn mx-1 next-btn rounded-3">1</button>
-            <button className="btn mx-1">2</button>
-            <button className="btn mx-1">3</button>
-            <span className="mx-2">...</span>
-            <button className="btn m-1">8</button>
-            <button className="btn m-1">9</button>
-            <button className="btn m-1">10</button>
+        {/* ✅ Functional Pagination */}
+        {totalPages > 1 && (
+          <div className="d-lg-flex d-md-flex justify-content-between align-items-center mt-3 px-3 pb-3">
+            {/* Previous Button */}
+            <button 
+              className={`btn previous rounded-3 ${!hasPrevious ? 'disabled' : ''}`}
+              onClick={handlePreviousPage}
+              disabled={!hasPrevious}
+              style={{ 
+                opacity: hasPrevious ? 1 : 0.5,
+                cursor: hasPrevious ? 'pointer' : 'not-allowed'
+              }}
+            >
+              <i className="fa-solid fa-arrow-left"></i> Previous
+            </button>
+
+            {/* Page Numbers */}
+            <div className="d-flex align-items-center">
+              {/* Show page numbers */}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <button
+                    key={pageNum}
+                    className={`btn mx-1 rounded-3 ${
+                      currentPage === pageNum ? 'next-btn' : ''
+                    }`}
+                    onClick={() => handlePageChange(pageNum)}
+                    style={{
+                      backgroundColor: currentPage === pageNum ? '#e32124' : '#fff',
+                      color: currentPage === pageNum ? '#fff' : '#000',
+                      border: '1px solid #d5d7da'
+                    }}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+              
+              {/* Show ellipsis if there are more pages */}
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <span className="mx-2">...</span>
+              )}
+              
+              {/* Show last page if not already shown */}
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <button
+                  className="btn mx-1 rounded-3"
+                  onClick={() => handlePageChange(totalPages)}
+                  style={{
+                    backgroundColor: currentPage === totalPages ? '#e32124' : '#fff',
+                    color: currentPage === totalPages ? '#fff' : '#000',
+                    border: '1px solid #d5d7da'
+                  }}
+                >
+                  {totalPages}
+                </button>
+              )}
+            </div>
+
+            {/* Next Button */}
+            <button 
+              className={`btn next-btn rounded-3 ${!hasNext ? 'disabled' : ''}`}
+              onClick={handleNextPage}
+              disabled={!hasNext}
+              style={{ 
+                opacity: hasNext ? 1 : 0.5,
+                cursor: hasNext ? 'pointer' : 'not-allowed'
+              }}
+            >
+              Next <i className="fa-solid fa-arrow-right"></i>
+            </button>
           </div>
-          <button className="btn next-btn rounded-3">
-            Next <i className="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
+        )}
+
+        {/* ✅ Pagination Info */}
+        {totalPages > 1 && (
+          <div className="text-center text-muted small px-3 pb-2">
+            Page {currentPage} of {totalPages} • {filteredActivists.length} total activists
+          </div>
+        )}
       </div>
     </div>
   );
