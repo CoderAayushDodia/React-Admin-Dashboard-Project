@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import NameDropdown from "./NamesDropdown";
 
 function AddReciepts({ addNewActivist }) {
   const navigate = useNavigate();
@@ -16,6 +17,15 @@ function AddReciepts({ addNewActivist }) {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+//   const handleChange = (e) => {
+//   const { name, value } = e.target;
+//   setFormData((prev) => ({
+//     ...prev,
+//     [name]: value, // ✅ This keeps previous name intact unless name field changes
+//   }));
+// };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -80,20 +90,20 @@ function AddReciepts({ addNewActivist }) {
             <div className="col-md-4">
               <h4 className="d-lg-none d-md-none d-block">Add Receipts</h4>
               <label className="form-label">
-                Select Lower Region{" "}
+                Reciept Book Numeber{" "}
                 <span className="text-danger fw-bold">*</span>
               </label>
               <input
                 type="text"
-                name="name"
-                className="form-select"
-                value={formData.name}
+                name="RecieptBookNumber"
+                className="form-control"
+                // value={formData.bookNumber}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div className="col-md-4">
+            {/* <div className="col-md-4">
               <label className="form-label">
                 Name <span className="text-danger fw-bold">*</span>
               </label>
@@ -105,25 +115,22 @@ function AddReciepts({ addNewActivist }) {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div> */}
 
+            {/* Name Dropdown */}
             <div className="col-md-4">
+              <h4 className="d-lg-none d-md-none d-block">Add Activist</h4>
               <label className="form-label">
-                Campaign Year <span className="text-danger fw-bold">*</span>
+                Name <span className="text-danger fw-bold">*</span>
               </label>
-              <select
-                type="text"
-                name="address"
-                className="form-select"
-                // value={formData.password}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Year</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-              </select>
+
+              <NameDropdown
+                value={formData.name}
+                onChange={(selectedName) =>
+                  setFormData((prev) => ({ ...prev, name: selectedName }))
+                }
+                // disabled={fetchingData || loading}
+              />
             </div>
           </div>
         </form>
