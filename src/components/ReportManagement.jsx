@@ -1,15 +1,201 @@
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+
+// import dashboardData from "../../public/dashboardData.json"; // Import JSON
+
+// function ReportManagement() {
+//   const navigate = useNavigate();
+//   const [activists, setActivists] = useState([]);
+  
+
+//   useEffect(() => {
+//     setActivists(dashboardData.ActivistManagement || []);
+//   }, []);
+
+//   return (
+//     <div className="main-container p-3">
+//       <div className="container-body">
+//         <div className="d-flex justify-content-between align-items-center mb-3 px-3 pt-3 activist-header">
+//           <h4 className="">Report Management</h4>
+
+//           <div className="d-flex gap-2 activist-action-buttons">
+//             <button className="download-btn">
+//              Download <i className="fa-solid fa-download me-1"></i> 
+//             </button>
+//             <button
+//               className="add-activist-btn"
+//               onClick={() => navigate("/reports/add")}
+//             >
+//                Create New <i className="fa-solid fa-plus me-1"></i>
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Filters */}
+//         <div className="d-flex flex-lg-nowrap flex-wrap gap-3 mb-3 px-3 py-2 activist-navbar w-100">
+//           {/* Search */}
+//           <div className="header-left rounded d-flex align-items-center position-relative flex-grow-1">
+//             <span>
+//               <i className="fa-solid fa-magnifying-glass"></i>
+//             </span>
+//             <input
+//               placeholder="Search"
+//               className="border-0 shadow-none form-control flex-grow-1"
+//               type="text"
+//             />
+//           </div>
+
+//           {/* Region Select */}
+//           <select className="form-select select-region flex-lg-grow-0" name="donor-type">
+//             <option>Location Type</option>
+//             <option>Mumbai</option>
+//             <option>Pune</option>
+//             <option>Nasik</option>
+//           </select>
+
+//           {/* Date Range */}
+//           <div className="d-flex align-items-center gap-1 select-date flex-lg-grow-0">
+//             <input type="date" name="date" className="form-control" />
+//             <span>-</span>
+//             <input type="date" name="date" className="form-control" />
+//           </div>
+
+//           {/* Apply Button */}
+//           <button className="apply-btn flex-lg-grow-0 flex-md-grow-1">Apply</button>
+//         </div>
+
+//         {/* Table */}
+//         <div className="table-wrapper">
+//           <div className="scroll-container">
+//             <table
+//               className="table align-middle activist-table"
+//               style={{
+//                 tableLayout: "auto", // or "fixed" depending on your need
+//                 minWidth: "800px", // force table to have a width bigger than container
+//                 whiteSpace: "nowrap", // prevent text from wrapping
+//               }}
+//             >
+//               <thead>
+//                 <tr className="border-bottom border-top">
+//                   <th>Date</th>
+//                   <th>Locations</th>
+//                   <th>Name</th>
+//                   <th>Description</th>
+//                   <th>Amount</th>
+//                   <th>Expense Type</th>
+//                   {/* <th>Status</th> */}
+//                   <th className="text-center"></th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {activists.length > 0 ? (
+//                   activists.map((activist, index) => (
+//                     <tr key={index}>
+//                       <td>{activist.name}</td>
+//                       <td>{activist.role}</td>
+//                       <td>{activist.region}</td>
+//                       <td>{activist.mobile}</td>
+
+//                       <td className="text-center">
+//                         <i className="fa-regular fa-pen-to-square mx-2"></i>
+//                         <i className="fa-regular fa-trash-can mx-2"></i>
+//                         <i className="fa-regular fa-eye mx-2"></i>
+//                       </td>
+//                     </tr>
+//                   ))
+//                 ) : (
+//                   <p>No activists found.</p>
+//                 )}
+//               </tbody>
+//             </table>
+//           </div>
+//         </div>
+
+//         {/* Pagination */}
+//         <div className="d-lg-flex d-md-flex justify-content-between align-items-center mt-3 px-3 pb-3 d-none">
+//           <button className="btn previous rounded-3">
+//             <i className="fa-solid fa-arrow-left"></i> Previous
+//           </button>
+//           <div>
+//             <button className="btn  mx-1 next-btn rounded-3">1</button>
+//             <button className="btn  mx-1">2</button>
+//             <button className="btn  mx-1">3</button>
+//             <span className="mx-2">...</span>
+//             <button className="btn m-1">8</button>
+//             <button className="btn m-1">9</button>
+//             <button className="btn m-1">10</button>
+//           </div>
+//           <button className="btn next-btn rounded-3">
+//             Next <i className="fa-solid fa-arrow-right"></i>
+//           </button>
+//         </div>
+
+//         <div className="d-sm-flex d-md-none d-none justify-content-between align-items-center mt-3 px-3 pb-3">
+//           <button className="btn previous rounded-3 p-2">
+//             <i className="fa-solid fa-arrow-left"></i>
+//           </button>
+//           <div>
+//             <span>Page 1 to 10</span>
+//           </div>
+//           <button className="btn next-btn rounded-3 p-2">
+//             <i className="fa-solid fa-arrow-right"></i>
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default ReportManagement;
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import dashboardData from "../../public/dashboardData.json"; // Import JSON
-
 function ReportManagement() {
   const navigate = useNavigate();
-  const [activists, setActivists] = useState([]);
-  
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const API_URL = "https://shramjivi-backend.onrender.com/api/report-web/";
+
+  const fetchReports = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch reports: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // ✅ Ensure correct format
+      if (Array.isArray(data)) {
+        setReports(data);
+      } else if (data?.results) {
+        setReports(data.results);
+      } else {
+        setReports([]);
+      }
+    } catch (err) {
+      console.error("fetchReports error:", err);
+      setError(err.message || "Unknown error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setActivists(dashboardData.ActivistManagement || []);
+    fetchReports();
   }, []);
 
   return (
@@ -20,20 +206,19 @@ function ReportManagement() {
 
           <div className="d-flex gap-2 activist-action-buttons">
             <button className="download-btn">
-             Download <i className="fa-solid fa-download me-1"></i> 
+              Download <i className="fa-solid fa-download me-1"></i>
             </button>
             <button
               className="add-activist-btn"
               onClick={() => navigate("/reports/add")}
             >
-               Create New <i className="fa-solid fa-plus me-1"></i>
+              Create New <i className="fa-solid fa-plus me-1"></i>
             </button>
           </div>
         </div>
 
         {/* Filters */}
         <div className="d-flex flex-lg-nowrap flex-wrap gap-3 mb-3 px-3 py-2 activist-navbar w-100">
-          {/* Search */}
           <div className="header-left rounded d-flex align-items-center position-relative flex-grow-1">
             <span>
               <i className="fa-solid fa-magnifying-glass"></i>
@@ -45,99 +230,73 @@ function ReportManagement() {
             />
           </div>
 
-          {/* Region Select */}
-          <select className="form-select select-region flex-lg-grow-0" name="donor-type">
+          <select className="form-select select-region flex-lg-grow-0" name="location">
             <option>Location Type</option>
             <option>Mumbai</option>
             <option>Pune</option>
             <option>Nasik</option>
           </select>
 
-          {/* Date Range */}
           <div className="d-flex align-items-center gap-1 select-date flex-lg-grow-0">
-            <input type="date" name="date" className="form-control" />
+            <input type="date" name="start-date" className="form-control" />
             <span>-</span>
-            <input type="date" name="date" className="form-control" />
+            <input type="date" name="end-date" className="form-control" />
           </div>
 
-          {/* Apply Button */}
           <button className="apply-btn flex-lg-grow-0 flex-md-grow-1">Apply</button>
         </div>
 
         {/* Table */}
         <div className="table-wrapper">
           <div className="scroll-container">
-            <table
-              className="table align-middle activist-table"
-              style={{
-                tableLayout: "auto", // or "fixed" depending on your need
-                minWidth: "800px", // force table to have a width bigger than container
-                whiteSpace: "nowrap", // prevent text from wrapping
-              }}
-            >
-              <thead>
-                <tr className="border-bottom border-top">
-                  <th>Name</th>
-                  <th>Role</th>
-                  <th>Region</th>
-                  <th>Mobile</th>
-                  {/* <th>Status</th> */}
-                  <th className="text-center"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {activists.length > 0 ? (
-                  activists.map((activist, index) => (
-                    <tr key={index}>
-                      <td>{activist.name}</td>
-                      <td>{activist.role}</td>
-                      <td>{activist.region}</td>
-                      <td>{activist.mobile}</td>
-
+            {loading ? (
+              <p className="text-center">Loading reports...</p>
+            ) : error ? (
+              <p className="text-danger text-center">{error}</p>
+            ) : reports.length > 0 ? (
+              <table
+                className="table align-middle activist-table"
+                style={{
+                  tableLayout: "auto",
+                  minWidth: "800px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <thead>
+                  <tr className="border-bottom border-top">
+                    <th>Date</th>
+                    <th>Locations</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Expense Type</th>
+                    <th className="text-center"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reports.map((report) => (
+                    <tr key={report.id}>
+                      <td>{report.report_date}</td>
+                      <td>
+                        {report.from_location || "-"} → {report.to_location || "-"}
+                      </td>
+                      <td>{report.activist_name}</td>
+                      <td className="description-cell">{report.description}</td>
+                      <td>{report.amount || "-"}</td>
+                      <td>{report.expense_type || "-"}</td>
                       <td className="text-center">
                         <i className="fa-regular fa-pen-to-square mx-2"></i>
                         <i className="fa-regular fa-trash-can mx-2"></i>
                         <i className="fa-regular fa-eye mx-2"></i>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <p>No activists found.</p>
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-center">No reports found.</p>
+            )}
           </div>
-        </div>
-
-        {/* Pagination */}
-        <div className="d-lg-flex d-md-flex justify-content-between align-items-center mt-3 px-3 pb-3 d-none">
-          <button className="btn previous rounded-3">
-            <i className="fa-solid fa-arrow-left"></i> Previous
-          </button>
-          <div>
-            <button className="btn  mx-1 next-btn rounded-3">1</button>
-            <button className="btn  mx-1">2</button>
-            <button className="btn  mx-1">3</button>
-            <span className="mx-2">...</span>
-            <button className="btn m-1">8</button>
-            <button className="btn m-1">9</button>
-            <button className="btn m-1">10</button>
-          </div>
-          <button className="btn next-btn rounded-3">
-            Next <i className="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-
-        <div className="d-sm-flex d-md-none d-none justify-content-between align-items-center mt-3 px-3 pb-3">
-          <button className="btn previous rounded-3 p-2">
-            <i className="fa-solid fa-arrow-left"></i>
-          </button>
-          <div>
-            <span>Page 1 to 10</span>
-          </div>
-          <button className="btn next-btn rounded-3 p-2">
-            <i className="fa-solid fa-arrow-right"></i>
-          </button>
         </div>
       </div>
     </div>
@@ -145,6 +304,7 @@ function ReportManagement() {
 }
 
 export default ReportManagement;
+
 
 // {
 //   activists.map((activist) => (
