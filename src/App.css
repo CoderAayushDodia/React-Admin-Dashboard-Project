@@ -597,6 +597,12 @@ input[type="radio"] {
   width: 150px;
 }
 
+.description-cell {
+  min-width: 250px; /* ✅ You can adjust width as needed */
+   white-space: normal; /* ✅ Allows wrapping instead of single-line */
+  word-wrap: break-word;
+}
+
 /* @media(max-width: 1026px) {
 .activist-navbar .select-dates input[type="date"].form-control,
   .activist-navbar .select-dates .date-input {
