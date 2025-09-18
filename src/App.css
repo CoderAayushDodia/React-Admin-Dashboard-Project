@@ -364,6 +364,7 @@ input[type="radio"] {
   display: inline-block;
   cursor: pointer;
   user-select: none;
+  width: 130px;
 }
 
 .dropdown-selected {
@@ -387,7 +388,7 @@ input[type="radio"] {
 }
 
 .dropdown-option {
-  padding: 6px 12px;
+  padding: 4px;
 }
 
 .dropdown-option:hover {

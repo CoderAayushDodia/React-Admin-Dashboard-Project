@@ -2001,8 +2001,515 @@
 
 // export default Home;
 
+//feature-add3-branch data
+// import React, { useState, useEffect, useMemo } from "react";
+// import { useNavigate } from "react-router-dom";
+// import NestedSelect from "./NestedSelect";
+// import SimpleDropdown from "./SimpleDropdown";
+// import {
+//   Chart,
+//   LineElement,
+//   PointElement,
+//   LinearScale,
+//   Title,
+//   Tooltip,
+//   Legend,
+//   CategoryScale,
+//   ArcElement,
+//   BarElement,
+// } from "chart.js";
+// import { Line, Bar, Doughnut } from "react-chartjs-2";
+
+// Chart.register(
+//   LineElement,
+//   PointElement,
+//   LinearScale,
+//   Title,
+//   Tooltip,
+//   Legend,
+//   CategoryScale,
+//   ArcElement,
+//   BarElement
+// );
+
+// function Home() {
+//   const navigate = useNavigate();
+//   const [dashboardData, setDashboardData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   const [timeFrame, setTimeFrame] = useState("monthly");
+//   const [view, setView] = useState("monthly");
+//   const [timeFrame2, setTimeFrame2] = useState("monthly");
+//   const [region1, setRegion1] = useState(null);
+//   const [selectedRegion, setSelectedRegion] = useState(null);
+//   const [isReportOpen, setIsReportOpen] = useState(false);
+//   const [selected, setSelected] = useState("new");
+//   const [reportType, setReportType] = useState("Membership");
+
+//   const regionss = ["Mumbai", "Satara"];
+
+//   // ---------- Fetch dashboard ----------
+//   useEffect(() => {
+//     async function getDashboardData() {
+//       try {
+//         setLoading(true);
+//         const res = await fetch(
+//           "https://shramjivi-backend.onrender.com/api/dashboard/",
+//           {
+//             method: "GET",
+//             credentials: "include",
+//             headers: { "Content-Type": "application/json" },
+//           }
+//         );
+
+//         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+//         const json = await res.json();
+//         setDashboardData(json);
+//       } catch (err) {
+//         console.error("API Error:", err);
+//         setError(err.message || "Unknown error");
+//       } finally {
+//         setLoading(false);
+//       }
+//     }
+
+//     getDashboardData();
+//   }, []);
+
+//   // ---------- Helpers ----------
+//   const sumTotalsFromObject = (obj) => {
+//     if (obj == null) return 0;
+//     if (typeof obj === "number") return obj;
+//     if (typeof obj === "object") {
+//       if (typeof obj.total === "number") return obj.total;
+//       return Object.values(obj).reduce(
+//         (acc, v) => acc + sumTotalsFromObject(v),
+//         0
+//       );
+//     }
+//     return 0;
+//   };
+
+//   const accumulateNewOld = (obj) => {
+//     let sumNew = 0;
+//     let sumOld = 0;
+
+//     if (!obj || typeof obj !== "object") return { new: 0, old: 0 };
+
+//     for (const key of Object.keys(obj)) {
+//       if (key === "total" && typeof obj[key] === "object") {
+//         sumNew += obj[key].new || 0;
+//         sumOld += obj[key].old || 0;
+//       } else if (typeof obj[key] === "object") {
+//         const nested = accumulateNewOld(obj[key]);
+//         sumNew += nested.new;
+//         sumOld += nested.old;
+//       }
+//     }
+
+//     return { new: sumNew, old: sumOld };
+//   };
+
+//   // ---------- Prepare region tree for NestedSelect ----------
+//   const regionsData = useMemo(() => {
+//     const source = dashboardData?.collection_trends?.monthly || {};
+//     const makeNode = (name, obj) => {
+//       const displayName = name === "null" || name == null ? "Unknown" : name;
+//       if (obj && typeof obj.total === "number") {
+//         return { taluka__name: displayName, total: obj.total };
+//       }
+//       const children = Object.keys(obj || {}).map((k) => makeNode(k, obj[k]));
+//       return { taluka__name: displayName, children };
+//     };
+//     return Object.keys(source).map((k) => makeNode(k, source[k]));
+//   }, [dashboardData]);
+
+//   // ---------- Chart Data ----------
+//   const getMembershipChartData = (frame) => {
+//     const source = dashboardData?.membership_growth?.[frame] || {};
+//     let labels = Object.keys(source);
+//     let data = labels.map((k) => Number(source[k] ?? 0));
+
+//     if (labels.length === 1) {
+//       labels = ["", labels[0]];
+//       data = [0, data[0]];
+//     }
+
+//     return {
+//       labels: labels.length ? labels : ["No Data"],
+//       datasets: [
+//         {
+//           label: "Members",
+//           data,
+//           borderColor: "red",
+//           backgroundColor: "rgba(75,192,192,0.2)",
+//           fill: false,
+//           tension: 0.4,
+//           pointRadius: 3,
+//         },
+//       ],
+//     };
+//   };
+
+//   const getCollectionChartData = (frame, selectedRegionNode) => {
+//     const source = dashboardData?.collection_trends?.[frame] || {};
+//     if (selectedRegionNode) {
+//       const total =
+//         typeof selectedRegionNode.total === "number"
+//           ? selectedRegionNode.total
+//           : selectedRegionNode.children?.reduce(
+//               (acc, c) => acc + (c.total ?? 0),
+//               0
+//             ) || 0;
+
+//       return {
+//         labels: [selectedRegionNode.taluka__name || "Selected"],
+//         datasets: [
+//           { label: `Collections (${frame})`, data: [total], borderRadius: 6 },
+//         ],
+//       };
+//     }
+
+//     const labels = Object.keys(source).map((k) =>
+//       k === "null" ? "Unknown" : k
+//     );
+//     const data = labels.map((k, idx) =>
+//       sumTotalsFromObject(source[Object.keys(source)[idx]])
+//     );
+//     return {
+//       labels,
+//       datasets: [{ label: `Collections (${frame})`, data, borderRadius: 6 }],
+//     };
+//   };
+
+//   const getTopPerformersChartData = () => {
+//     const performers = dashboardData?.top_performers || [];
+//     return {
+//       labels: performers.map((p) => p.name),
+//       datasets: [
+//         {
+//           data: performers.map((p) => Number(p.total ?? 0)),
+//           backgroundColor: ["#e60000", "#ff3333", "#ff4d4d", "#ff6666"],
+//           borderWidth: 1,
+//         },
+//       ],
+//     };
+//   };
+
+//   const getNewVsOldChartData = (frame) => {
+//     const source =
+//       dashboardData?.new_vs_old?.[frame === "annually" ? "yearly" : frame] ||
+//       {};
+//     const labels = Object.keys(source).map((k) =>
+//       k === "null" ? "Unknown" : k
+//     );
+//     const newData = [];
+//     const oldData = [];
+//     for (const k of Object.keys(source)) {
+//       const sums = accumulateNewOld(source[k]);
+//       newData.push(sums.new);
+//       oldData.push(sums.old);
+//     }
+//     return {
+//       labels,
+//       datasets: [
+//         { label: "New Members", data: newData, backgroundColor: "red" },
+//         { label: "Old Members", data: oldData, backgroundColor: "lightgrey" },
+//       ],
+//     };
+//   };
+
+//   useEffect(() => {
+//     const handleClickOutside = (e) => {
+//       if (!e.target.closest(".nav-link-wrapper")) {
+//         setIsReportOpen(false);
+//       }
+//     };
+//     document.addEventListener("click", handleClickOutside);
+//     return () => document.removeEventListener("click", handleClickOutside);
+//   }, []);
+
+//   // ---------- UI States ----------
+//   if (loading) return <p className="text-center mt-5">Loading dashboard...</p>;
+//   if (error) return <p className="text-center text-danger">Error: {error}</p>;
+//   if (!dashboardData) return <p className="text-center">No data available</p>;
+
+//   const { summary = {} } = dashboardData;
+
+//   return (
+//     <main className="main-container p-lg-3 p-sm-none">
+//       <div className="container-body rounded-lg-4 rounded-md-4 p-3">
+//         {/* ---- TITLE + ACTION BUTTONS ---- */}
+//         <div className="main-title d-flex justify-content-between rounder-4">
+//           <h3>Dashboard</h3>{" "}
+//           <ul className="list-unstyled d-lg-inline-flex gap-2 sidebar-list d-sm-block">
+//             {" "}
+//             <div className="d-lg-flex gap-2 receipt-announcement-div">
+//               {" "}
+//               <li>
+//                 {" "}
+//                 <a
+//                   href="#!"
+//                   onClick={(e) => {
+//                     e.preventDefault();
+//                     navigate("/receipts");
+//                   }}
+//                   className="text-decoration-none rounded-2 px-2 px-lg-3 py-2 distribute-btn"
+//                 >
+//                   Distribute Receipts
+//                 </a>
+//               </li>
+//               <li>
+//                 <a
+//                   href="#!"
+//                   onClick={(e) => {
+//                     e.preventDefault();
+//                     navigate("/announcements");
+//                   }}
+//                   className="text-decoration-none rounded-2 px-sm-1 px-md-2 px-lg-3 py-2 send-btn"
+//                 >
+//                   Send Announcement
+//                 </a>
+//               </li>
+//             </div>
+//             <div className="report-container-wrapper">
+//               <li className="nav-link-wrapper">
+//                 <a
+//                   onClick={() => setIsReportOpen((prev) => !prev)}
+//                   href="#!"
+//                   className="text-decoration-none rounded-2 px-3 py-2 generate-btn text-center"
+//                 >
+//                   Generate Report
+//                 </a>
+//                 <div
+//                   className={`report-container shadow-lg ${
+//                     isReportOpen ? "show" : ""
+//                   }`}
+//                 >
+//                   <div className="report-title d-flex justify-content-between align-items-center">
+//                     <h3>Report Types</h3>
+//                     <i
+//                       className="fa-solid fa-xmark"
+//                       onClick={() => setIsReportOpen(false)}
+//                       style={{ cursor: "pointer" }}
+//                     ></i>
+//                   </div>
+
+//                   <div className="report-body">
+//                     <label htmlFor="report">Report Types</label>
+//                     <div className="select-box">
+//                       <select
+//                         id="report"
+//                         value={reportType}
+//                         onChange={(e) => setReportType(e.target.value)}
+//                       >
+//                         <option>Membership</option>
+//                         <option>Collections</option>
+//                         <option>Activist Performance</option>
+//                         <option>Daily Report Summaries</option>
+//                         <option>New Member Analysis</option>
+//                       </select>
+//                     </div>
+
+//                     <label htmlFor="summary">Financial Summary</label>
+//                     <div className="select-box">
+//                       <select id="summary">
+//                         <option>Year 2025</option>
+//                         <option>Year 2024</option>
+//                         <option>Year 2023</option>
+//                       </select>
+//                     </div>
+
+//                     {reportType === "New Member Analysis" && (
+//                       <>
+//                         <label>Donor Type</label>
+//                         <div className="radio-group">
+//                           <label>
+//                             <input
+//                               type="radio"
+//                               name="donor"
+//                               value="old"
+//                               checked={selected === "old"}
+//                               onChange={(e) => setSelected(e.target.value)}
+//                             />{" "}
+//                             Old Donor
+//                           </label>
+//                           <label>
+//                             <input
+//                               type="radio"
+//                               name="donor"
+//                               value="new"
+//                               checked={selected === "new"}
+//                               onChange={(e) => setSelected(e.target.value)}
+//                             />{" "}
+//                             New Donor
+//                           </label>
+//                         </div>
+//                       </>
+//                     )}
+
+//                     <div className="d-flex justify-content-end justify-sm-center">
+//                       <button className="btn1 px-4 rounded">Generate</button>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </li>
+//             </div>
+//           </ul>
+//         </div>
+
+//         {/* ---- SUMMARY CARDS ---- */}
+//         <div className="row main-cards">
+//           {[
+//             ["Total Activists", summary.total_activists],
+//             ["Total Members", summary.total_members],
+//             ["Collections This Month", summary.collections_this_month],
+//             ["Collections This Year", summary.collections_this_year],
+//             ["New Daily Reports", summary.new_daily_reports],
+//             ["New Members Ratio (%)", summary.new_members_ratio],
+//           ].map(([title, value]) => (
+//             <div className="cards" key={title}>
+//               <div className="card-inner rounded-3 p-3">
+//                 <h4>{title}</h4>
+//                 <span>{value ?? "0"}</span>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* ---- CHARTS ---- */}
+//         <div className="charts row mt-4">
+//           {/* Membership Growth */}
+//           <div className="col-md-6 mb-4">
+//             <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+//               <div className="d-flex justify-content-between align-items-center">
+//                 <h5>Membership Growth</h5>
+//                 <div className="tabs d-flex">
+//                   <button
+//                     className={`tab ${timeFrame === "yearly" ? "active" : ""}`}
+//                     onClick={() => setTimeFrame("yearly")}
+//                   >
+//                     Annually
+//                   </button>
+//                   <button
+//                     className={`tab ${timeFrame === "monthly" ? "active" : ""}`}
+//                     onClick={() => setTimeFrame("monthly")}
+//                   >
+//                     Monthly
+//                   </button>
+//                 </div>
+//               </div>
+//               <Line
+//                 data={getMembershipChartData(timeFrame)}
+//                 options={{ responsive: true }}
+//               />
+//             </div>
+//           </div>
+
+//           {/* Collection Trends */}
+//           <div className="col-md-6 mb-4">
+//             <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+//               <div className="d-flex align-items-center justify-content-between flex-wrap chart-controls">
+//                 <h5>Collection Trends</h5>
+//                 <NestedSelect
+//                   regions={regionsData}
+//                   onSelect={setSelectedRegion}
+//                 />
+//                 <div className="tabs tabs1 d-flex">
+//                   <button
+//                     className={`tab ${view === "monthly" ? "active" : ""}`}
+//                     onClick={() => setView("monthly")}
+//                   >
+//                     Monthly
+//                   </button>
+//                   <button
+//                     className={`tab ${view === "yearly" ? "active" : ""}`}
+//                     onClick={() => setView("yearly")}
+//                   >
+//                     Annually
+//                   </button>
+//                 </div>
+//               </div>
+//               <Bar data={getCollectionChartData(view, selectedRegion)} />
+//             </div>
+//           </div>
+
+//           {/* Top Performers */}
+//           <div className="col-md-6 mb-4">
+//             <div
+//               className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4"
+//               style={{ height: "380px" }}
+//             >
+//               <h5>Top Performers</h5>
+//               <Doughnut
+//                 data={getTopPerformersChartData()}
+//                 options={{
+//                   responsive: true,
+//                   maintainAspectRatio: false,
+//                   cutout: "65%",
+//                   radius: "90%",
+//                   plugins: {
+//                     legend: {
+//                       position: "right",
+//                       labels: {
+//                         usePointStyle: true,
+//                         pointStyle: "circle",
+//                         font: { size: 14 },
+//                       },
+//                     },
+//                   },
+//                 }}
+//               />
+//             </div>
+//           </div>
+
+//           {/* New vs Old */}
+//           <div className="col-md-6 mb-4">
+//             <div className="chart-box p-3 rounded-3 shadow-sm bg-white mt-4">
+//               <div className="d-flex align-items-center flex-wrap justify-content-between chart-controls">
+//                 <h5>New vs Old Members</h5>
+//                 <SimpleDropdown
+//                   options={regionss}
+//                   selected={region1}
+//                   onChange={setRegion1}
+//                 />
+//                 <div className="tabs d-flex tabs1">
+//                   <button
+//                     className={`tab ${timeFrame2 === "yearly" ? "active" : ""}`}
+//                     onClick={() => setTimeFrame2("yearly")}
+//                   >
+//                     Annually
+//                   </button>
+//                   <button
+//                     className={`tab ${
+//                       timeFrame2 === "monthly" ? "active" : ""
+//                     }`}
+//                     onClick={() => setTimeFrame2("monthly")}
+//                   >
+//                     Monthly
+//                   </button>
+//                 </div>
+//               </div>
+//               <Bar
+//                 data={getNewVsOldChartData(timeFrame2)}
+//                 options={{
+//                   scales: { x: { stacked: true }, y: { stacked: true } },
+//                   elements: { bar: { borderRadius: 6 } },
+//                 }}
+//               />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </main>
+//   );
+// }
+
+// export default Home;
+
+
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import NestedSelect from "./NestedSelect";
 import SimpleDropdown from "./SimpleDropdown";
 import {
@@ -2032,7 +2539,6 @@ Chart.register(
 );
 
 function Home() {
-  const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -2040,13 +2546,15 @@ function Home() {
   const [timeFrame, setTimeFrame] = useState("monthly");
   const [view, setView] = useState("monthly");
   const [timeFrame2, setTimeFrame2] = useState("monthly");
+
   const [region1, setRegion1] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState(null);
+
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [selected, setSelected] = useState("new");
   const [reportType, setReportType] = useState("Membership");
 
-  const regionss = ["Mumbai", "Satara"];
+  // const regionss = ["Mumbai", "Satara"];
 
   // ---------- Fetch dashboard ----------
   useEffect(() => {
@@ -2124,32 +2632,130 @@ function Home() {
     return Object.keys(source).map((k) => makeNode(k, source[k]));
   }, [dashboardData]);
 
-  // ---------- Chart Data ----------
-  const getMembershipChartData = (frame) => {
-    const source = dashboardData?.membership_growth?.[frame] || {};
-    let labels = Object.keys(source);
-    let data = labels.map((k) => Number(source[k] ?? 0));
+  // ---------- Dynamic region list for SimpleDropdown ----------
+  // const regionOptions = useMemo(() => {
+  //   const source =
+  //     dashboardData?.new_vs_old?.[
+  //       timeFrame2 === "yearly" ? "yearly" : timeFrame2
+  //     ] || {};
+  //   const regions = Object.keys(source || {});
+  //   return regions.length > 0 ? ["All Regions", ...regions] : [];
+  // }, [dashboardData, timeFrame2]);
 
-    if (labels.length === 1) {
-      labels = ["", labels[0]];
-      data = [0, data[0]];
-    }
+  //   const regionOptions = useMemo(() => {
+  //   const sourceRoot =
+  //     dashboardData?.new_vs_old?.[
+  //       timeFrame2 === "yearly" ? "yearly" : timeFrame2
+  //     ] || {};
 
-    return {
-      labels: labels.length ? labels : ["No Data"],
-      datasets: [
-        {
-          label: "Members",
-          data,
-          borderColor: "red",
-          backgroundColor: "rgba(75,192,192,0.2)",
-          fill: false,
-          tension: 0.4,
-          pointRadius: 3,
-        },
-      ],
-    };
+  //   // ✅ Pick the first month or year key
+  //   const firstKey = Object.keys(sourceRoot)[0];
+  //   const source = sourceRoot[firstKey] || {};
+
+  //   const regions = Object.keys(source);
+  //   return regions.length > 0 ? ["All Regions", ...regions] : [];
+  // }, [dashboardData, timeFrame2]);
+
+  const buildRegionOptions = (source) => {
+    return Object.keys(source).map((region) => {
+      const subregions = Object.keys(source[region] || {}).filter(
+        (sub) => sub !== "total"
+      );
+      return {
+        label: region,
+        children:
+          subregions.length > 0
+            ? subregions.map((sub) => ({ label: sub }))
+            : null,
+      };
+    });
   };
+
+  const regionOptions = useMemo(() => {
+    const sourceRoot =
+      dashboardData?.new_vs_old?.[
+        timeFrame2 === "yearly" ? "yearly" : timeFrame2
+      ] || {};
+
+    const firstKey = Object.keys(sourceRoot)[0];
+    const source = sourceRoot[firstKey] || {};
+
+    return buildRegionOptions(source);
+  }, [dashboardData, timeFrame2]);
+
+  // ---------- Chart Data ----------
+  // const getMembershipChartData = (frame) => {
+  //   const source = dashboardData?.membership_growth?.[frame] || {};
+  //   let labels = Object.keys(source);
+  //   let data = labels.map((k) => Number(source[k] ?? 0));
+
+  //   if (labels.length === 1) {
+  //     labels = ["", labels[0]];
+  //     data = [0, data[0]];
+  //   }
+
+  //   return {
+  //     labels: labels.length ? labels : ["No Data"],
+  //     datasets: [
+  //       {
+  //         label: "Members",
+  //         data,
+  //         borderColor: "red",
+  //         backgroundColor: "rgba(75,192,192,0.2)",
+  //         fill: false,
+  //         tension: 0.4,
+  //         pointRadius: 3,
+  //       },
+  //     ],
+  //   };
+  // };
+
+  const getMembershipChartData = (frame) => {
+  const source = dashboardData?.membership_growth?.[frame] || {};
+  let labels = Object.keys(source);
+
+  // ✅ Sort months chronologically if we are in "monthly"
+  if (frame === "monthly") {
+    const monthOrder = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    labels.sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
+  }
+
+  let data = labels.map((k) => Number(source[k] ?? 0));
+
+  if (labels.length === 1) {
+    labels = ["", labels[0]];
+    data = [0, data[0]];
+  }
+
+  return {
+    labels: labels.length ? labels : ["No Data"],
+    datasets: [
+      {
+        label: "Members",
+        data,
+        borderColor: "red",
+        backgroundColor: "rgba(75,192,192,0.2)",
+        fill: false,
+        tension: 0.4,
+        pointRadius: 3,
+      },
+    ],
+  };
+};
+
 
   const getCollectionChartData = (frame, selectedRegionNode) => {
     const source = dashboardData?.collection_trends?.[frame] || {};
@@ -2196,20 +2802,61 @@ function Home() {
     };
   };
 
+  // const getNewVsOldChartData = (frame) => {
+  //   const source =
+  //     dashboardData?.new_vs_old?.[frame === "annually" ? "yearly" : frame] ||
+  //     {};
+  //   const labels = Object.keys(source).map((k) =>
+  //     k === "null" ? "Unknown" : k
+  //   );
+  //   const newData = [];
+  //   const oldData = [];
+  //   for (const k of Object.keys(source)) {
+  //     const sums = accumulateNewOld(source[k]);
+  //     newData.push(sums.new);
+  //     oldData.push(sums.old);
+  //   }
+  //   return {
+  //     labels,
+  //     datasets: [
+  //       { label: "New Members", data: newData, backgroundColor: "red" },
+  //       { label: "Old Members", data: oldData, backgroundColor: "lightgrey" },
+  //     ],
+  //   };
+  // };
+
   const getNewVsOldChartData = (frame) => {
-    const source =
-      dashboardData?.new_vs_old?.[frame === "annually" ? "yearly" : frame] ||
-      {};
-    const labels = Object.keys(source).map((k) =>
+    const sourceRoot =
+      dashboardData?.new_vs_old?.[frame === "yearly" ? "yearly" : frame] || {};
+
+    // ✅ Get first month/year inside monthly/yearly
+    const firstKey = Object.keys(sourceRoot)[0];
+    const source = sourceRoot[firstKey] || {};
+
+    let filteredSource = source;
+
+    if (region1) {
+      if (region1.includes("/")) {
+        const [parent, child] = region1.split("/");
+        filteredSource = { [child]: source[parent][child] };
+      } else {
+        filteredSource = { [region1]: source[region1] };
+      }
+    }
+
+    const labels = Object.keys(filteredSource).map((k) =>
       k === "null" ? "Unknown" : k
     );
+
     const newData = [];
     const oldData = [];
-    for (const k of Object.keys(source)) {
-      const sums = accumulateNewOld(source[k]);
+
+    for (const k of Object.keys(filteredSource)) {
+      const sums = accumulateNewOld(filteredSource[k]);
       newData.push(sums.new);
       oldData.push(sums.old);
     }
+
     return {
       labels,
       datasets: [
@@ -2250,10 +2897,6 @@ function Home() {
                 {" "}
                 <a
                   href="#!"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/receipts");
-                  }}
                   className="text-decoration-none rounded-2 px-2 px-lg-3 py-2 distribute-btn"
                 >
                   Distribute Receipts
@@ -2262,10 +2905,6 @@ function Home() {
               <li>
                 <a
                   href="#!"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/announcements");
-                  }}
                   className="text-decoration-none rounded-2 px-sm-1 px-md-2 px-lg-3 py-2 send-btn"
                 >
                   Send Announcement
@@ -2469,7 +3108,7 @@ function Home() {
               <div className="d-flex align-items-center flex-wrap justify-content-between chart-controls">
                 <h5>New vs Old Members</h5>
                 <SimpleDropdown
-                  options={regionss}
+                  options={regionOptions}
                   selected={region1}
                   onChange={setRegion1}
                 />
