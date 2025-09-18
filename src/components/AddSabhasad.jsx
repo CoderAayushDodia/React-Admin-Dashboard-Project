@@ -11,10 +11,20 @@ function AddSabhasad({ addNewActivist }) {
     region: "",
     mobile: "",
     password: "",
+    image: null,
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
+
+   const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setFormData({ ...formData, image: files[0] }); // ✅ handle image file
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -227,6 +237,30 @@ function AddSabhasad({ addNewActivist }) {
                 onChange={handleChange}
                 required
               />
+            </div>
+
+            <div className="col-md-4">
+              <label className="form-label">
+                Upload Image <span className="text-danger fw-bold">*</span>
+              </label>
+              <input
+                type="file"
+                name="image"
+                className="form-control"
+                accept="image/*"
+                onChange={handleChange}
+                required
+              />
+              {/* ✅ Preview if file selected */}
+              {formData.image && (
+                <div className="mt-2">
+                  <img
+                    src={URL.createObjectURL(formData.image)}
+                    alt="Preview"
+                    style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "8px" }}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </form>
